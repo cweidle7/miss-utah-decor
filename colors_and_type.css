@@ -1,0 +1,248 @@
+/* ============================================================
+   Miss Utah Decor — Colors & Type tokens
+   Source: missutahdecor.com, logo, hero photography
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Alex+Brush&family=Dancing+Script:wght@500;600;700&family=Playfair+Display:wght@400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* --------------------------------------------------------
+     BRAND COLORS
+     Pulled from logo balloons + site's hot-pink CTAs +
+     the pastel/blush/gold photography palette.
+     -------------------------------------------------------- */
+
+  /* Hot pinks — the CTA/accent workhorses */
+  --pink-500: #EC4899;   /* primary CTA (the "LETS PARTY" button) */
+  --pink-600: #DB2777;   /* hover / deeper band */
+  --pink-400: #F472B6;
+  --pink-300: #F9A8D4;
+  --pink-200: #FBCFE8;
+  --pink-100: #FCE7F3;
+  --pink-50:  #FDF2F8;
+
+  /* Burgundy / magenta from the logo's watercolor balloons */
+  --magenta-900: #7A1740;
+  --magenta-700: #A81D57;
+  --magenta-500: #C41E6B;
+
+  /* Pastel / blush — matches photography (weddings, showers) */
+  --blush:      #F7D9D0;
+  --blush-soft: #FBE9E2;
+  --peach:      #F6C6B0;
+  --lavender:   #D9C7E5;
+  --lilac:      #B79CD1;
+  --mint:       #C9E4CA;
+  --cream:      #FFF7EE;
+
+  /* Metallics — balloon highlights */
+  --gold:       #C8A24A;
+  --gold-light: #E4C978;
+  --silver:     #BFC4CA;
+
+  /* Neutrals */
+  --ink:        #0E0A0C;   /* logo script is near-black */
+  --ink-soft:   #3A2A32;
+  --fg-1:       #1A1015;   /* primary text */
+  --fg-2:       #5B4850;   /* secondary text */
+  --fg-3:       #8F7A82;   /* tertiary / meta */
+  --fg-invert:  #FFFFFF;
+
+  --bg-1:       #FFFFFF;   /* page */
+  --bg-2:       #FFF7F9;   /* subtle pink-tinted surface */
+  --bg-3:       #FDECEF;   /* blush card */
+  --bg-hot:     var(--pink-500); /* hot-pink band (site uses this below the fold) */
+
+  --border-1:   #F3D9E1;
+  --border-2:   #EABFCC;
+
+  /* Semantic */
+  --color-primary:       var(--pink-500);
+  --color-primary-hover: var(--pink-600);
+  --color-accent:        var(--magenta-700);
+  --color-success:       #6FBF73;
+  --color-danger:        #D94848;
+  --color-link:          var(--magenta-700);
+
+  /* --------------------------------------------------------
+     TYPE
+     - Display script  : "Miss Utah" logo vibe
+     - Display serif   : the uppercase hero on the homepage
+     - UI sans         : nav + body + buttons
+     -------------------------------------------------------- */
+  --font-script:  'Alex Brush', 'Dancing Script', cursive;         /* brand script */
+  --font-display: 'Playfair Display', 'Didot', Georgia, serif;     /* hero headlines */
+  --font-sans:    'Montserrat', 'Helvetica Neue', Arial, sans-serif;/* UI + body */
+  --font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* Type scale — optimized for party/event marketing site */
+  --fs-hero:   clamp(48px, 7vw, 96px);     /* "WE DON'T JUST MAKE BALLOONS..." */
+  --fs-h1:     clamp(40px, 5vw, 64px);
+  --fs-h2:     clamp(32px, 4vw, 48px);
+  --fs-h3:     28px;
+  --fs-h4:     22px;
+  --fs-lead:   20px;
+  --fs-body:   16px;
+  --fs-small:  14px;
+  --fs-caps:   12px;   /* uppercase nav + buttons */
+
+  --lh-tight:  1.05;
+  --lh-snug:   1.2;
+  --lh-normal: 1.5;
+  --lh-loose:  1.7;
+
+  --tracking-caps:    0.14em;   /* nav items, button labels */
+  --tracking-display: 0.01em;
+
+  /* --------------------------------------------------------
+     SPACING / RADIUS / SHADOW / MOTION
+     -------------------------------------------------------- */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 96px;
+  --space-10: 128px;
+
+  --radius-sm:  4px;
+  --radius-md:  10px;
+  --radius-lg:  18px;
+  --radius-xl:  28px;
+  --radius-pill: 999px;   /* the hot-pink CTA is a full pill */
+
+  --shadow-sm: 0 1px 2px rgba(26,16,21,.06), 0 1px 1px rgba(26,16,21,.04);
+  --shadow-md: 0 6px 20px rgba(196, 30, 107, .10), 0 2px 6px rgba(26,16,21,.05);
+  --shadow-lg: 0 18px 40px rgba(196, 30, 107, .18), 0 6px 12px rgba(26,16,21,.08);
+  --shadow-pink: 0 10px 30px rgba(236, 72, 153, .35);
+
+  --ease-out:    cubic-bezier(.22,.61,.36,1);
+  --ease-bounce: cubic-bezier(.34, 1.56, .64, 1);
+  --dur-fast:    120ms;
+  --dur-med:     220ms;
+  --dur-slow:    420ms;
+
+  --container-max: 1280px;
+  --container-pad: clamp(20px, 4vw, 56px);
+}
+
+/* ============================================================
+   SEMANTIC ELEMENT DEFAULTS
+   Apply these on html/body or scope under .mud to opt in.
+   ============================================================ */
+.mud,
+.mud * { box-sizing: border-box; }
+
+.mud {
+  font-family: var(--font-sans);
+  color: var(--fg-1);
+  background: var(--bg-1);
+  font-size: var(--fs-body);
+  line-height: var(--lh-normal);
+  -webkit-font-smoothing: antialiased;
+}
+
+.mud h1, .mud .h1 {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-h1);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--tracking-display);
+  text-transform: uppercase;
+  color: var(--fg-1);
+  margin: 0 0 var(--space-5);
+}
+.mud .hero-title {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: var(--fs-hero);
+  line-height: .95;
+  letter-spacing: 0.005em;
+  text-transform: uppercase;
+  color: var(--fg-invert);
+  text-shadow: 0 2px 18px rgba(0,0,0,.35);
+}
+.mud h2, .mud .h2 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: var(--fs-h2);
+  line-height: var(--lh-snug);
+  margin: 0 0 var(--space-4);
+}
+.mud h3, .mud .h3 {
+  font-family: var(--font-sans);
+  font-weight: 700;
+  font-size: var(--fs-h3);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+.mud h4, .mud .h4 {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-h4);
+}
+.mud .eyebrow {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: var(--fs-caps);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+  color: var(--fg-2);
+}
+.mud .script {
+  font-family: var(--font-script);
+  font-weight: 400;
+  font-size: clamp(40px, 5vw, 72px);
+  line-height: 1;
+  color: var(--ink);
+}
+.mud p, .mud .body { font-size: var(--fs-body); line-height: var(--lh-normal); color: var(--fg-1); }
+.mud .lead { font-size: var(--fs-lead); line-height: var(--lh-loose); color: var(--fg-1); font-weight: 400; }
+.mud .caption { font-size: var(--fs-small); color: var(--fg-3); }
+.mud a { color: var(--color-link); text-decoration: none; border-bottom: 1px solid transparent; transition: border-color var(--dur-fast) var(--ease-out); }
+.mud a:hover { border-bottom-color: currentColor; }
+
+/* Nav + button label style — the site uses Montserrat uppercase tracked-out */
+.mud .nav-link,
+.mud .btn {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: var(--fs-caps);
+  letter-spacing: var(--tracking-caps);
+  text-transform: uppercase;
+}
+
+/* The signature hot-pink pill CTA */
+.mud .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: 16px 28px;
+  border: none;
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  background: var(--pink-500);
+  color: var(--fg-invert);
+  box-shadow: var(--shadow-pink);
+  transition: transform var(--dur-med) var(--ease-bounce),
+              background var(--dur-fast) var(--ease-out),
+              box-shadow var(--dur-med) var(--ease-out);
+}
+.mud .btn:hover  { background: var(--pink-600); transform: translateY(-2px); }
+.mud .btn:active { transform: translateY(0) scale(.98); }
+.mud .btn--ghost {
+  background: transparent;
+  color: var(--pink-500);
+  border: 2px solid var(--pink-500);
+  box-shadow: none;
+}
+.mud .btn--ghost:hover { background: var(--pink-50); }
+.mud .btn--dark {
+  background: var(--ink);
+  color: var(--fg-invert);
+  box-shadow: var(--shadow-md);
+}

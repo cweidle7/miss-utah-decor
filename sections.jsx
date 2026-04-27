@@ -1,18 +1,35 @@
 // Miss Utah Decor — Homepage content sections (trust strip, offerings, packages, testimonials, make-it, insta, contact)
 
-// Placeholder image map — swap these paths with real assets when ready
+// Image paths — see assets/manifest.json for source dimensions and full alt copy.
+// All assets live under /assets organized by use: /gallery, /hero, /press.
 const IMG = {
-  archTall:    'https://picsum.photos/seed/pinkarchtall/600/800',
-  backdrops:   'https://picsum.photos/seed/backdrop25/600/630',
-  florals:     'https://picsum.photos/seed/florals25/600/630',
-  milestone:   'https://picsum.photos/seed/milestone50/600/630',
-  grabgo:      'https://picsum.photos/seed/partykit/600/630',
-  featureMake: 'https://picsum.photos/seed/studio25/480/600',
-  tvApp:       'https://picsum.photos/seed/tvmedia/104/104',
-  ig1:         'https://picsum.photos/seed/social1/400/400',
-  ig2:         'https://picsum.photos/seed/social2/400/400',
-  ig3:         'https://picsum.photos/seed/social3/400/400',
-  ig4:         'https://picsum.photos/seed/social4/400/400',
+  archTall:    'assets/gallery/balloon-arch-pink-silver.jpg',
+  backdrops:   'assets/gallery/backdrop-sage-its-a-boy.jpg',
+  florals:     'assets/gallery/babyshower-oh-baby.jpg',
+  milestone:   'assets/gallery/milestone-50-pastel.jpg',
+  grabgo:      'assets/gallery/gender-reveal-boy-or-girl.jpg',
+  featureMake: 'assets/gallery/backdrop-sage-its-a-boy.jpg',
+  tvApp:       'assets/press/tv-good-things-utah.jpg',
+  ig1:         'assets/gallery/babyshower-oh-baby.jpg',
+  ig2:         'assets/gallery/gender-reveal-boy-or-girl.jpg',
+  ig3:         'assets/gallery/milestone-50-pastel.jpg',
+  ig4:         'assets/gallery/balloon-arch-pink-silver.jpg',
+};
+
+// Alt text paired by key — used by components that render background-image divs
+// so screen readers still get meaningful descriptions via aria-label.
+const ALT = {
+  archTall:    'Pink and silver balloon arch with neon Happy Birthday sign and disco wall',
+  backdrops:   'Sage green and cream balloon backdrop with an It’s a Boy cart',
+  florals:     'Cream and sage Oh Baby! baby shower with neon arch and pampas florals',
+  milestone:   'Pastel pink and lavender 50th birthday balloon arch with marquee numbers',
+  grabgo:      'Boy or Girl gender reveal setup with pampas, balloons and bulldog ring bearer',
+  featureMake: 'Mother-daughter studio at work — sage balloon backdrop in progress',
+  tvApp:       'Miss Utah Decor team featured on the Good Things Utah TV set',
+  ig1:         'Oh Baby! welcome sign and balloon backdrop for a baby shower',
+  ig2:         'Boy or Girl gender reveal balloon arch with bulldog',
+  ig3:         'Pastel surprise 50th party balloon arch with lit numbers',
+  ig4:         'Pink and silver disco-themed balloon arch with star foils',
 };
 
 const TrustStrip = () => {
@@ -83,17 +100,18 @@ const PinkBand = () => {
   );
 };
 
-const CategoryTile = ({ src, label, copy, onClick, tall = false, isMobile = false }) => {
+const CategoryTile = ({ src, alt, label, copy, onClick, tall = false, isMobile = false }) => {
   const [hover, setHover] = React.useState(false);
   return (
     <a href="#" onClick={(e)=>{e.preventDefault(); onClick?.()}}
        onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}
+       aria-label={`${label} — ${copy}`}
        style={{
          textDecoration:'none', color:'inherit', display:'flex', flexDirection:'column', gap: 18,
          cursor:'pointer',
          gridRow: (!isMobile && tall) ? 'span 2' : 'auto',
        }}>
-      <div style={{
+      <div role="img" aria-label={alt} style={{
         position:'relative',
         width:'100%',
         aspectRatio: (!isMobile && tall) ? '0.85 / 1.3' : '1 / 1.05',
@@ -139,11 +157,11 @@ const CategoryGrid = ({ onPick }) => {
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
         <SectionIntro eyebrow="What We Make" title="Decor for every" scriptWord="celebration" subtitle="Pick a canvas — we'll build the rest around your colors, venue, and vibe." />
         <div style={{ display:'grid', gridTemplateColumns: cols, gridTemplateRows:'auto', gap: isMobile ? 20 : 28 }}>
-          <CategoryTile tall={!isMobile} isMobile={isMobile} src={IMG.archTall}    label="Balloon Arches"    copy="Floor-standing, ceiling, full rooms. Our signature."    onClick={()=>onPick?.('balloons')} />
-          <CategoryTile               isMobile={isMobile} src={IMG.backdrops}  label="Backdrops"          copy="Welcome signs, photo walls, marquee letters."           onClick={()=>onPick?.('backdrops')} />
-          <CategoryTile               isMobile={isMobile} src={IMG.florals}    label="Florals"            copy="Fresh & faux arrangements to match any palette."        onClick={()=>onPick?.('florals')} />
-          <CategoryTile               isMobile={isMobile} src={IMG.milestone}  label="Milestone Numbers"  copy="Marquee 30s, 40s, 50s — lit up & photo-ready."         onClick={()=>onPick?.('milestone')} />
-          <CategoryTile               isMobile={isMobile} src={IMG.grabgo}     label="Grab 'n Go"         copy="Pre-built kits for smaller at-home celebrations."       onClick={()=>onPick?.('grabgo')} />
+          <CategoryTile tall={!isMobile} isMobile={isMobile} src={IMG.archTall}   alt={ALT.archTall}   label="Balloon Arches"    copy="Floor-standing, ceiling, full rooms. Our signature."    onClick={()=>onPick?.('balloons')} />
+          <CategoryTile               isMobile={isMobile} src={IMG.backdrops}  alt={ALT.backdrops}  label="Backdrops"          copy="Welcome signs, photo walls, marquee letters."           onClick={()=>onPick?.('backdrops')} />
+          <CategoryTile               isMobile={isMobile} src={IMG.florals}    alt={ALT.florals}    label="Florals"            copy="Fresh & faux arrangements to match any palette."        onClick={()=>onPick?.('florals')} />
+          <CategoryTile               isMobile={isMobile} src={IMG.milestone}  alt={ALT.milestone}  label="Milestone Numbers"  copy="Marquee 30s, 40s, 50s — lit up & photo-ready."         onClick={()=>onPick?.('milestone')} />
+          <CategoryTile               isMobile={isMobile} src={IMG.grabgo}     alt={ALT.grabgo}     label="Grab 'n Go"         copy="Pre-built kits for smaller at-home celebrations."       onClick={()=>onPick?.('grabgo')} />
         </div>
       </div>
     </section>
@@ -333,7 +351,7 @@ const WeMakeIt = ({ onCTA }) => {
         gap:'clamp(32px,6vw,96px)', alignItems:'center',
       }}>
         <div style={{ position:'relative' }}>
-          <div style={{
+          <div role="img" aria-label={ALT.featureMake} style={{
             width:'100%', aspectRatio:'4/5',
             backgroundImage:`url(${IMG.featureMake})`, backgroundSize:'cover', backgroundPosition:'center',
             borderRadius: 24, boxShadow:'var(--shadow-lg)',
@@ -349,7 +367,7 @@ const WeMakeIt = ({ onCTA }) => {
             boxShadow:'var(--shadow-lg)', display:'flex', alignItems:'center', gap: 16,
             maxWidth: 260,
           }}>
-            <div style={{
+            <div role="img" aria-label={ALT.tvApp} style={{
               width: 52, height: 52, borderRadius: 12, flexShrink: 0,
               backgroundImage:`url(${IMG.tvApp})`, backgroundSize:'cover', backgroundPosition:'center',
             }} />
@@ -384,10 +402,10 @@ const WeMakeIt = ({ onCTA }) => {
 const InstagramGrid = () => {
   const { isMobile, isTablet } = useBreakpoint();
   const posts = [
-    { src: IMG.ig1, caption: 'Adding a backdrop is a good idea as welcome sign to your event — just look how stunning this Mami is', tags: '#babyshower #welcomesign' },
-    { src: IMG.ig2, caption: 'Gender Reveal party, but a good boy stole the show at the reveal with his bows', tags: '#genderreveal' },
-    { src: IMG.ig3, caption: 'How delicate are these colors for a surprise 50 party', tags: '#50party #50balloons' },
-    { src: IMG.ig4, caption: 'Pastel dreams and marquee numbers — this 50th had us in our feelings', tags: '#milestone #50' },
+    { src: IMG.ig1, alt: ALT.ig1, caption: 'Adding a backdrop is a good idea as welcome sign to your event — just look how stunning this Mami is', tags: '#babyshower #welcomesign' },
+    { src: IMG.ig2, alt: ALT.ig2, caption: 'Gender Reveal party, but a good boy stole the show at the reveal with his bows', tags: '#genderreveal' },
+    { src: IMG.ig3, alt: ALT.ig3, caption: 'How delicate are these colors for a surprise 50 party', tags: '#50party #50balloons' },
+    { src: IMG.ig4, alt: ALT.ig4, caption: 'Pastel dreams and marquee numbers — this 50th had us in our feelings', tags: '#milestone #50' },
   ];
   return (
     <section style={{ padding: 'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background: '#fff' }}>
@@ -411,7 +429,7 @@ const InstagramGrid = () => {
           {posts.map((p, i) => (
             <a key={i} href="https://instagram.com/missutahdecor" target="_blank" rel="noreferrer"
                style={{ textDecoration:'none', color:'inherit', display:'flex', flexDirection:'column', gap: 12 }}>
-              <div style={{
+              <div role="img" aria-label={p.alt} style={{
                 position:'relative',
                 width:'100%', aspectRatio: '1', backgroundImage:`url(${p.src})`,
                 backgroundSize:'cover', backgroundPosition:'center',

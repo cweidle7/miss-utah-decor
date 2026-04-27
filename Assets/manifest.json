@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "Miss Utah Decor — Site Assets",
+  "version": "1.0.0",
+  "updated": "2026-04-27",
+  "convention": {
+    "naming": "kebab-case, descriptive (event-type-or-color-palette)",
+    "case": "lowercase folders + filenames; case-sensitive servers will fail otherwise",
+    "formats": {
+      "photos": "JPG q82 progressive, max 1600px on long edge",
+      "logo": "PNG with transparency",
+      "video": "MP4 H.264 yuv420p, faststart, 720p",
+      "poster": "JPG q82, 1280px wide"
+    }
+  },
+  "assets": {
+    "logo": {
+      "path": "assets/logo.png",
+      "type": "image/png",
+      "width": 721,
+      "height": 321,
+      "alt": "Miss Utah Decor",
+      "usage": ["header logo via shared.jsx Logo component", "footer"],
+      "notes": "Keep PNG for transparency; only ~84KB so no need to convert."
+    },
+    "hero.video": {
+      "path": "assets/hero/hero.mp4",
+      "type": "video/mp4",
+      "width": 720,
+      "height": 1280,
+      "duration_s": 6.67,
+      "poster": "assets/hero/hero-poster.jpg",
+      "usage": ["hero.jsx — desktop billboard background"],
+      "notes": "Vertical 9:16 source; cropped via object-fit on render. Mobile uses poster-only to save data."
+    },
+    "hero.poster": {
+      "path": "assets/hero/hero-poster.jpg",
+      "type": "image/jpeg",
+      "width": 1280,
+      "height": 2276,
+      "alt": "Pink and gold balloon arch with neon Happy Birthday sign",
+      "usage": ["hero.jsx — mobile background, video poster fallback"]
+    },
+    "gallery.balloon-arch-pink-silver": {
+      "path": "assets/gallery/balloon-arch-pink-silver.jpg",
+      "type": "image/jpeg",
+      "width": 1440,
+      "height": 1149,
+      "alt": "Pink and silver balloon arch with neon Happy Birthday sign and disco wall",
+      "usage": [
+        "CategoryGrid → Balloon Arches tile (tall)",
+        "InstagramGrid → post 4"
+      ]
+    },
+    "gallery.backdrop-sage-its-a-boy": {
+      "path": "assets/gallery/backdrop-sage-its-a-boy.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Sage green and cream balloon backdrop with an It's a Boy cart",
+      "usage": [
+        "CategoryGrid → Backdrops tile",
+        "WeMakeIt → feature panel (4:5 crop)"
+      ]
+    },
+    "gallery.babyshower-oh-baby": {
+      "path": "assets/gallery/babyshower-oh-baby.jpg",
+      "type": "image/jpeg",
+      "width": 1282,
+      "height": 1600,
+      "alt": "Cream and sage Oh Baby! baby shower with neon arch and pampas florals",
+      "usage": [
+        "CategoryGrid → Florals tile (placeholder until a dedicated florals shot ships)",
+        "InstagramGrid → post 1"
+      ]
+    },
+    "gallery.gender-reveal-boy-or-girl": {
+      "path": "assets/gallery/gender-reveal-boy-or-girl.jpg",
+      "type": "image/jpeg",
+      "width": 1280,
+      "height": 1600,
+      "alt": "Boy or Girl gender reveal setup with pampas, balloons and bulldog ring bearer",
+      "usage": [
+        "CategoryGrid → Grab 'n Go tile",
+        "InstagramGrid → post 2"
+      ]
+    },
+    "gallery.milestone-50-pastel": {
+      "path": "assets/gallery/milestone-50-pastel.jpg",
+      "type": "image/jpeg",
+      "width": 1440,
+      "height": 1440,
+      "alt": "Pastel pink and lavender 50th birthday balloon arch with marquee numbers",
+      "usage": [
+        "CategoryGrid → Milestone Numbers tile",
+        "InstagramGrid → post 3"
+      ]
+    },
+    "press.tv-good-things-utah": {
+      "path": "assets/press/tv-good-things-utah.jpg",
+      "type": "image/jpeg",
+      "width": 1400,
+      "height": 1050,
+      "alt": "Miss Utah Decor team featured on the Good Things Utah TV set",
+      "usage": ["WeMakeIt → 'As seen on' badge thumbnail"]
+    }
+  },
+  "open_slots": [
+    {
+      "key": "florals",
+      "needed_for": "CategoryGrid Florals tile",
+      "current_fallback": "babyshower-oh-baby.jpg",
+      "ideal_shot": "tight crop of fresh/faux floral arrangement (no balloons dominating)"
+    },
+    {
+      "key": "grabgo",
+      "needed_for": "CategoryGrid Grab 'n Go tile",
+      "current_fallback": "gender-reveal-boy-or-girl.jpg",
+      "ideal_shot": "small at-home party kit / pre-built bouquet of balloons in a box"
+    }
+  ]
+}

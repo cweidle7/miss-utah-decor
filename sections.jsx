@@ -1,6 +1,22 @@
 // Miss Utah Decor — Homepage content sections (trust strip, offerings, packages, testimonials, make-it, insta, contact)
 
+// Placeholder image map — swap these paths with real assets when ready
+const IMG = {
+  archTall:    'https://picsum.photos/seed/pinkarchtall/600/800',
+  backdrops:   'https://picsum.photos/seed/backdrop25/600/630',
+  florals:     'https://picsum.photos/seed/florals25/600/630',
+  milestone:   'https://picsum.photos/seed/milestone50/600/630',
+  grabgo:      'https://picsum.photos/seed/partykit/600/630',
+  featureMake: 'https://picsum.photos/seed/studio25/480/600',
+  tvApp:       'https://picsum.photos/seed/tvmedia/104/104',
+  ig1:         'https://picsum.photos/seed/social1/400/400',
+  ig2:         'https://picsum.photos/seed/social2/400/400',
+  ig3:         'https://picsum.photos/seed/social3/400/400',
+  ig4:         'https://picsum.photos/seed/social4/400/400',
+};
+
 const TrustStrip = () => {
+  const { isMobile } = useBreakpoint();
   const stats = [
     { num: '10+', label: 'Years crafting parties' },
     { num: '500+', label: 'Events decorated' },
@@ -9,10 +25,20 @@ const TrustStrip = () => {
   ];
   return (
     <section style={{ background: 'var(--cream)', padding: '36px clamp(20px,4vw,56px)', borderBottom: '1px solid var(--border-1)' }}>
-      <div style={{ maxWidth: 1280, margin: '0 auto', display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 24, alignItems:'center' }}>
+      <div style={{
+        maxWidth: 1280, margin: '0 auto',
+        display: 'grid',
+        gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+        gap: 24, alignItems: 'center',
+      }}>
         {stats.map((s, i) => (
-          <div key={s.num} style={{ display:'flex', alignItems:'center', gap: 16, borderLeft: i === 0 ? 'none' : '1px solid var(--border-2)', paddingLeft: i === 0 ? 0 : 24 }}>
-            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(36px, 3.2vw, 48px)', color: 'var(--pink-500)', lineHeight: 1 }}>{s.num}</div>
+          <div key={s.num} style={{
+            display: 'flex', alignItems: 'center', gap: 16,
+            // On mobile 2-col: border on even items (col 2); on desktop: border on all but first
+            borderLeft: (isMobile ? i % 2 !== 0 : i !== 0) ? '1px solid var(--border-2)' : 'none',
+            paddingLeft: (isMobile ? i % 2 !== 0 : i !== 0) ? 24 : 0,
+          }}>
+            <div style={{ fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 'clamp(28px, 3.2vw, 48px)', color: 'var(--pink-500)', lineHeight: 1 }}>{s.num}</div>
             <div style={{ fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 12, letterSpacing: '.16em', textTransform: 'uppercase', color: 'var(--fg-2)', lineHeight: 1.4 }}>{s.label}</div>
           </div>
         ))}
@@ -32,20 +58,19 @@ const PinkBand = () => {
           <div style={{ fontFamily:'var(--font-sans)', fontWeight: 600, fontSize: 11, letterSpacing:'.3em', textTransform:'uppercase', color:'var(--pink-100)', marginBottom: 14 }}>— The studio in one line —</div>
           <p style={{
             fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500,
-            fontSize: 'clamp(22px, 2.2vw, 32px)', lineHeight: 1.35,
+            fontSize: 'clamp(18px, 2.2vw, 32px)', lineHeight: 1.35,
             color: '#fff', margin: 0, textWrap: 'pretty',
           }}>
             Over a decade turning empty rooms into <span style={{ fontFamily:'var(--font-script)', fontStyle:'normal', fontWeight:400, fontSize:'1.4em', color:'var(--cream)' }}>pure magic</span> — from small arches to full-venue installations, we bring every creative vision to life.
           </p>
         </div>
       </div>
-      {/* Occasion marquee */}
       <div style={{ marginTop: 40, overflow: 'hidden', borderTop: '1px solid rgba(255,255,255,.2)', borderBottom: '1px solid rgba(255,255,255,.2)', padding: '16px 0' }}>
         <div style={{ display:'flex', gap: 40, whiteSpace:'nowrap', animation:'mud-marquee 42s linear infinite' }}>
           {row.map((o, i) => (
             <span key={i} style={{
               fontFamily:'var(--font-display)', fontWeight: 700, fontStyle:'italic',
-              fontSize: 'clamp(22px, 2.2vw, 30px)',
+              fontSize: 'clamp(18px, 2.2vw, 30px)',
               color:'#fff', display:'inline-flex', alignItems:'center', gap: 40,
             }}>
               {o}
@@ -58,15 +83,20 @@ const PinkBand = () => {
   );
 };
 
-const CategoryTile = ({ src, label, copy, onClick, tall = false }) => {
+const CategoryTile = ({ src, label, copy, onClick, tall = false, isMobile = false }) => {
   const [hover, setHover] = React.useState(false);
   return (
     <a href="#" onClick={(e)=>{e.preventDefault(); onClick?.()}}
        onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}
-       style={{ textDecoration:'none', color:'inherit', display:'flex', flexDirection:'column', gap: 18, cursor:'pointer', gridRow: tall ? 'span 2' : 'auto' }}>
+       style={{
+         textDecoration:'none', color:'inherit', display:'flex', flexDirection:'column', gap: 18,
+         cursor:'pointer',
+         gridRow: (!isMobile && tall) ? 'span 2' : 'auto',
+       }}>
       <div style={{
         position:'relative',
-        width:'100%', aspectRatio: tall ? '0.85 / 1.3' : '1 / 1.05',
+        width:'100%',
+        aspectRatio: (!isMobile && tall) ? '0.85 / 1.3' : '1 / 1.05',
         backgroundImage:`url(${src})`, backgroundSize:'cover', backgroundPosition:'center',
         borderRadius: 18, boxShadow: hover ? 'var(--shadow-lg)' : 'var(--shadow-md)',
         transform: hover ? 'translateY(-6px)' : 'translateY(0)',
@@ -83,7 +113,7 @@ const CategoryTile = ({ src, label, copy, onClick, tall = false }) => {
           color:'#fff',
         }}>
           <div>
-            <div style={{ fontFamily:'var(--font-display)', fontWeight:800, fontSize: tall ? 36 : 28, textTransform:'uppercase', letterSpacing:'.01em', lineHeight: 1 }}>{label}</div>
+            <div style={{ fontFamily:'var(--font-display)', fontWeight:800, fontSize: (!isMobile && tall) ? 36 : 24, textTransform:'uppercase', letterSpacing:'.01em', lineHeight: 1 }}>{label}</div>
             <div style={{ fontFamily:'var(--font-sans)', fontWeight: 400, fontSize: 13, marginTop: 8, opacity:.9, maxWidth: 280 }}>{copy}</div>
           </div>
           <span style={{
@@ -101,20 +131,24 @@ const CategoryTile = ({ src, label, copy, onClick, tall = false }) => {
   );
 };
 
-const CategoryGrid = ({ onPick }) => (
-  <section id="offer" style={{ padding: 'clamp(80px,10vw,128px) clamp(20px,4vw,56px)', background: '#fff' }}>
-    <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-      <SectionIntro eyebrow="What We Make" title="Decor for every" scriptWord="celebration" subtitle="Pick a canvas — we'll build the rest around your colors, venue, and vibe." />
-      <div style={{ display:'grid', gridTemplateColumns:'1.2fr 1fr 1fr', gridTemplateRows:'auto auto', gap: 28 }}>
-        <CategoryTile tall src="assets/balloon-arch-pink-silver.png" label="Balloon Arches" copy="Floor-standing, ceiling, full rooms. Our signature." onClick={()=>onPick?.('balloons')} />
-        <CategoryTile src="assets/backdrops.png" label="Backdrops" copy="Welcome signs, photo walls, marquee letters." onClick={()=>onPick?.('backdrops')} />
-        <CategoryTile src="assets/florals.png" label="Florals" copy="Fresh & faux arrangements to match any palette." onClick={()=>onPick?.('florals')} />
-        <CategoryTile src="assets/ig-50party.jpg" label="Milestone Numbers" copy="Marquee 30s, 40s, 50s — lit up & photo-ready." onClick={()=>onPick?.('milestone')} />
-        <CategoryTile src="assets/ig-babyshower.jpg" label="Grab 'n Go" copy="Pre-built kits for smaller at-home celebrations." onClick={()=>onPick?.('grabgo')} />
+const CategoryGrid = ({ onPick }) => {
+  const { isMobile, isTablet } = useBreakpoint();
+  const cols = isMobile ? '1fr' : isTablet ? '1fr 1fr' : '1.2fr 1fr 1fr';
+  return (
+    <section id="offer" style={{ padding: 'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background: '#fff' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <SectionIntro eyebrow="What We Make" title="Decor for every" scriptWord="celebration" subtitle="Pick a canvas — we'll build the rest around your colors, venue, and vibe." />
+        <div style={{ display:'grid', gridTemplateColumns: cols, gridTemplateRows:'auto', gap: isMobile ? 20 : 28 }}>
+          <CategoryTile tall={!isMobile} isMobile={isMobile} src={IMG.archTall}    label="Balloon Arches"    copy="Floor-standing, ceiling, full rooms. Our signature."    onClick={()=>onPick?.('balloons')} />
+          <CategoryTile               isMobile={isMobile} src={IMG.backdrops}  label="Backdrops"          copy="Welcome signs, photo walls, marquee letters."           onClick={()=>onPick?.('backdrops')} />
+          <CategoryTile               isMobile={isMobile} src={IMG.florals}    label="Florals"            copy="Fresh & faux arrangements to match any palette."        onClick={()=>onPick?.('florals')} />
+          <CategoryTile               isMobile={isMobile} src={IMG.milestone}  label="Milestone Numbers"  copy="Marquee 30s, 40s, 50s — lit up & photo-ready."         onClick={()=>onPick?.('milestone')} />
+          <CategoryTile               isMobile={isMobile} src={IMG.grabgo}     label="Grab 'n Go"         copy="Pre-built kits for smaller at-home celebrations."       onClick={()=>onPick?.('grabgo')} />
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const PackageCard = ({ tier, price, badge, bullets, featured, onCTA }) => {
   const [hover, setHover] = React.useState(false);
@@ -141,6 +175,7 @@ const PackageCard = ({ tier, price, badge, bullets, featured, onCTA }) => {
           background: featured ? '#fff' : 'var(--ink)', color: featured ? 'var(--pink-500)' : '#fff',
           padding: '7px 16px', borderRadius: 999,
           boxShadow:'0 6px 16px rgba(0,0,0,.18)',
+          whiteSpace: 'nowrap',
         }}>{badge}</div>
       )}
       <div style={{
@@ -180,68 +215,82 @@ const PackageCard = ({ tier, price, badge, bullets, featured, onCTA }) => {
   );
 };
 
-const Packages = ({ onCTA }) => (
-  <section id="packages" style={{ padding: 'clamp(80px,10vw,128px) clamp(20px,4vw,56px)', background: 'var(--bg-2)' }}>
-    <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-      <SectionIntro eyebrow="Party packages" title="Everything you need," scriptWord="nothing you don't." subtitle="Transparent pricing to start the conversation — every package is fully customized to your colors, theme, and venue." />
-      <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap: 28, marginTop: 40 }}>
-        <PackageCard
-          tier="Sweet"
-          price="$350"
-          bullets={[
-            '6–8 ft balloon garland in your palette',
-            'Up to 3 coordinating colors',
-            'Delivery within Salt Lake County',
-            'Setup and teardown included',
-            'Perfect for at-home showers & birthdays',
-          ]}
-          onCTA={onCTA}
-        />
-        <PackageCard
-          tier="Signature"
-          price="$850"
-          badge="★ Most booked"
-          featured
-          bullets={[
-            '12 ft arch or backdrop installation',
-            'Up to 5 colors + metallic accents',
-            'Included florals or marquee numbers',
-            'Neon sign (rental, your choice of phrase)',
-            'Statewide delivery & full styling',
-          ]}
-          onCTA={onCTA}
-        />
-        <PackageCard
-          tier="Grand Event"
-          price="$1,800"
-          bullets={[
-            'Full venue installation, ceiling to floor',
-            'Custom backdrop build + signage',
-            'Fresh florals, marquee, lighting',
-            'On-site stylist for the full event',
-            'Tear-down the following morning',
-          ]}
-          onCTA={onCTA}
-        />
+const Packages = ({ onCTA }) => {
+  const { isMobile, isTablet } = useBreakpoint();
+  return (
+    <section id="packages" style={{ padding: 'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background: 'var(--bg-2)' }}>
+      <div style={{ maxWidth: 1280, margin: '0 auto' }}>
+        <SectionIntro eyebrow="Party packages" title="Everything you need," scriptWord="nothing you don't." subtitle="Transparent pricing to start the conversation — every package is fully customized to your colors, theme, and venue." />
+        <div style={{
+          display:'grid',
+          gridTemplateColumns: isMobile || isTablet ? '1fr' : 'repeat(3, 1fr)',
+          gap: 28, marginTop: 40,
+          maxWidth: isMobile || isTablet ? 520 : 'none',
+          marginLeft: 'auto', marginRight: 'auto',
+        }}>
+          <PackageCard
+            tier="Sweet"
+            price="$350"
+            bullets={[
+              '6–8 ft balloon garland in your palette',
+              'Up to 3 coordinating colors',
+              'Delivery within Salt Lake County',
+              'Setup and teardown included',
+              'Perfect for at-home showers & birthdays',
+            ]}
+            onCTA={onCTA}
+          />
+          <PackageCard
+            tier="Signature"
+            price="$850"
+            badge="★ Most booked"
+            featured
+            bullets={[
+              '12 ft arch or backdrop installation',
+              'Up to 5 colors + metallic accents',
+              'Included florals or marquee numbers',
+              'Neon sign (rental, your choice of phrase)',
+              'Statewide delivery & full styling',
+            ]}
+            onCTA={onCTA}
+          />
+          <PackageCard
+            tier="Grand Event"
+            price="$1,800"
+            bullets={[
+              'Full venue installation, ceiling to floor',
+              'Custom backdrop build + signage',
+              'Fresh florals, marquee, lighting',
+              'On-site stylist for the full event',
+              'Tear-down the following morning',
+            ]}
+            onCTA={onCTA}
+          />
+        </div>
+        <p style={{ textAlign:'center', marginTop: 32, fontSize: 14, color:'var(--fg-2)' }}>
+          Need something bigger or smaller? <a href="#contact" onClick={(e)=>{e.preventDefault(); onCTA?.()}} style={{ color:'var(--pink-500)', fontWeight: 600 }}>Let's build a custom quote →</a>
+        </p>
       </div>
-      <p style={{ textAlign:'center', marginTop: 32, fontSize: 14, color:'var(--fg-2)' }}>
-        Need something bigger or smaller? <a href="#contact" onClick={(e)=>{e.preventDefault(); onCTA?.()}} style={{ color:'var(--pink-500)', fontWeight: 600 }}>Let's build a custom quote →</a>
-      </p>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const Testimonials = () => {
+  const { isMobile, isTablet } = useBreakpoint();
   const quotes = [
     { q: "We walked into the venue and my mom cried. Miss Utah Decor turned my quinceañera into something out of a movie.", name: 'Valeria G.', role: 'Quinceañera · Sandy', accent: 'var(--lavender)' },
     { q: "They showed up, set up, tore down. Every detail was exactly what I asked for, plus things I didn't even think of.", name: 'Brittney W.', role: 'Baby Shower · Provo', accent: 'var(--blush)' },
     { q: "Best decor team in Utah, hands down. I've booked them three times and will book again for every milestone.", name: 'Michelle R.', role: 'Milestone 40 · SLC', accent: 'var(--peach)' },
   ];
   return (
-    <section style={{ padding: 'clamp(80px,10vw,120px) clamp(20px,4vw,56px)', background: '#fff' }}>
+    <section style={{ padding: 'clamp(64px,10vw,120px) clamp(20px,4vw,56px)', background: '#fff' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
         <SectionIntro eyebrow="Kind words" title="Our clients keep" scriptWord="coming back." />
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap: 24 }}>
+        <div style={{
+          display:'grid',
+          gridTemplateColumns: isMobile ? '1fr' : isTablet ? 'repeat(2, 1fr)' : 'repeat(3, 1fr)',
+          gap: 24,
+        }}>
           {quotes.map((q, i) => (
             <div key={i} style={{
               background:'var(--bg-3)', borderRadius: 18, padding: 32,
@@ -249,12 +298,12 @@ const Testimonials = () => {
               borderTop:`3px solid ${q.accent}`,
               boxShadow:'var(--shadow-sm)',
             }}>
-              <div style={{ fontFamily:'var(--font-display)', fontSize: 64, lineHeight: .6, color:'var(--pink-500)', fontWeight: 800 }}>“</div>
+              <div style={{ fontFamily:'var(--font-display)', fontSize: 64, lineHeight: .6, color:'var(--pink-500)', fontWeight: 800 }}>"</div>
               <p style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 18, lineHeight: 1.5, color:'var(--fg-1)', margin: 0, flex:1 }}>
                 {q.q}
               </p>
               <div style={{ display:'flex', alignItems:'center', gap: 14, paddingTop: 12, borderTop:'1px solid var(--border-1)' }}>
-                <div style={{ width: 36, height: 36, borderRadius: 999, background: q.accent, display:'grid', placeItems:'center', fontFamily:'var(--font-display)', fontWeight: 800, color:'var(--ink)' }}>{q.name[0]}</div>
+                <div style={{ width: 36, height: 36, borderRadius: 999, background: q.accent, display:'grid', placeItems:'center', fontFamily:'var(--font-display)', fontWeight: 800, color:'var(--ink)', flexShrink: 0 }}>{q.name[0]}</div>
                 <div>
                   <div style={{ fontFamily:'var(--font-sans)', fontWeight: 700, fontSize: 13 }}>{q.name}</div>
                   <div style={{ fontFamily:'var(--font-sans)', fontWeight: 500, fontSize: 10, letterSpacing:'.18em', textTransform:'uppercase', color:'var(--fg-2)', marginTop: 2 }}>{q.role}</div>
@@ -268,77 +317,97 @@ const Testimonials = () => {
   );
 };
 
-const WeMakeIt = ({ onCTA }) => (
-  <section id="story" style={{
-    padding: 'clamp(80px,10vw,128px) clamp(20px,4vw,56px)',
-    background: 'var(--bg-2)', position:'relative', overflow:'hidden',
-  }}>
-    <div aria-hidden="true" style={{ position:'absolute', inset:0, background:'radial-gradient(40% 60% at 90% 10%, rgba(236,72,153,.08), transparent 70%)' }} />
-    <div style={{ position:'relative', maxWidth: 1280, margin: '0 auto', display:'grid', gridTemplateColumns:'1fr 1fr', gap:'clamp(32px,6vw,96px)', alignItems:'center' }}>
-      <div style={{ position:'relative' }}>
-        <div style={{
-          width:'100%', aspectRatio:'4/5',
-          backgroundImage:'url(assets/feature-makeit.png)', backgroundSize:'cover', backgroundPosition:'center',
-          borderRadius: 24, boxShadow:'var(--shadow-lg)',
-        }} />
-        <div style={{
-          position:'absolute', bottom: -24, right: -24,
-          background:'#fff', borderRadius: 18, padding: '18px 24px',
-          boxShadow:'var(--shadow-lg)', display:'flex', alignItems:'center', gap: 16,
-          maxWidth: 260,
-        }}>
+const WeMakeIt = ({ onCTA }) => {
+  const { isMobile, isTablet } = useBreakpoint();
+  const stacked = isMobile || isTablet;
+  return (
+    <section id="story" style={{
+      padding: 'clamp(64px,10vw,128px) clamp(20px,4vw,56px)',
+      background: 'var(--bg-2)', position:'relative', overflow:'hidden',
+    }}>
+      <div aria-hidden="true" style={{ position:'absolute', inset:0, background:'radial-gradient(40% 60% at 90% 10%, rgba(236,72,153,.08), transparent 70%)' }} />
+      <div style={{
+        position:'relative', maxWidth: 1280, margin: '0 auto',
+        display:'grid',
+        gridTemplateColumns: stacked ? '1fr' : '1fr 1fr',
+        gap:'clamp(32px,6vw,96px)', alignItems:'center',
+      }}>
+        <div style={{ position:'relative' }}>
           <div style={{
-            width: 52, height: 52, borderRadius: 12, flexShrink: 0,
-            backgroundImage:'url(assets/tv-appearance.png)', backgroundSize:'cover', backgroundPosition:'center',
+            width:'100%', aspectRatio:'4/5',
+            backgroundImage:`url(${IMG.featureMake})`, backgroundSize:'cover', backgroundPosition:'center',
+            borderRadius: 24, boxShadow:'var(--shadow-lg)',
           }} />
-          <div>
-            <div style={{ fontFamily:'var(--font-sans)', fontWeight:700, fontSize: 11, letterSpacing:'.18em', textTransform:'uppercase', color:'var(--pink-500)' }}>As seen on</div>
-            <div style={{ fontFamily:'var(--font-display)', fontWeight: 700, fontSize: 17, color:'var(--ink)' }}>Good Things Utah</div>
+          {/* "As seen on" badge — repositioned on mobile to avoid overflow */}
+          <div style={{
+            position: stacked ? 'relative' : 'absolute',
+            bottom: stacked ? 'auto' : -24,
+            right: stacked ? 'auto' : -24,
+            marginTop: stacked ? 16 : 0,
+            marginLeft: stacked ? 'auto' : 0,
+            background:'#fff', borderRadius: 18, padding: '18px 24px',
+            boxShadow:'var(--shadow-lg)', display:'flex', alignItems:'center', gap: 16,
+            maxWidth: 260,
+          }}>
+            <div style={{
+              width: 52, height: 52, borderRadius: 12, flexShrink: 0,
+              backgroundImage:`url(${IMG.tvApp})`, backgroundSize:'cover', backgroundPosition:'center',
+            }} />
+            <div>
+              <div style={{ fontFamily:'var(--font-sans)', fontWeight:700, fontSize: 11, letterSpacing:'.18em', textTransform:'uppercase', color:'var(--pink-500)' }}>As seen on</div>
+              <div style={{ fontFamily:'var(--font-display)', fontWeight: 700, fontSize: 17, color:'var(--ink)' }}>Good Things Utah</div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style={{ fontFamily:'var(--font-sans)', fontWeight: 600, fontSize: 11, letterSpacing:'.24em', textTransform:'uppercase', color:'var(--pink-500)' }}>Our Story</div>
+          <div style={{ fontFamily:'var(--font-script)', fontSize:'clamp(56px, 9vw, 120px)', lineHeight: .9, color:'var(--ink)', margin:'8px 0 4px' }}>We make it</div>
+          <h3 style={{ fontFamily:'var(--font-display)', fontWeight:700, fontSize: 'clamp(20px, 2vw, 30px)', lineHeight:1.2, color:'var(--fg-1)', margin:'4px 0 20px', maxWidth: 520, textTransform:'none', letterSpacing: 0 }}>
+            A mother-daughter studio, obsessed with the moment you walk in.
+          </h3>
+          <p style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 18, lineHeight: 1.65, color:'var(--fg-1)', maxWidth: 520, margin:'0 0 18px' }}>
+            We started in 2014 in our garage and grew into Utah's go-to balloon decor studio. Every event gets our full attention — the palette, the flow, the small flourishes no one else would notice.
+          </p>
+          <p style={{ fontSize: 15, lineHeight: 1.7, color:'var(--fg-2)', maxWidth: 520, margin:'0 0 32px' }}>
+            From backyard baby showers to on-camera segments for Good Things Utah, we treat every event like it's our own.
+          </p>
+          <div style={{ display:'flex', gap: 16, flexWrap:'wrap' }}>
+            <Button variant="primary" size="md" onClick={onCTA}>Start your event</Button>
+            <Button variant="ghost" size="md" href="#offer" onClick={(e)=>{e.preventDefault(); document.getElementById('offer')?.scrollIntoView({ behavior:'smooth' })}}>See our work</Button>
           </div>
         </div>
       </div>
-      <div>
-        <div style={{ fontFamily:'var(--font-sans)', fontWeight: 600, fontSize: 11, letterSpacing:'.24em', textTransform:'uppercase', color:'var(--pink-500)' }}>Our Story</div>
-        <div style={{ fontFamily:'var(--font-script)', fontSize:'clamp(72px, 9vw, 120px)', lineHeight: .9, color:'var(--ink)', margin:'8px 0 4px' }}>We make it</div>
-        <h3 style={{ fontFamily:'var(--font-display)', fontWeight:700, fontSize: 'clamp(24px, 2vw, 30px)', lineHeight:1.2, color:'var(--fg-1)', margin:'4px 0 20px', maxWidth: 520, textTransform:'none', letterSpacing: 0 }}>
-          A mother-daughter studio, obsessed with the moment you walk in.
-        </h3>
-        <p style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 18, lineHeight: 1.65, color:'var(--fg-1)', maxWidth: 520, margin:'0 0 18px' }}>
-          We started in 2014 in our garage and grew into Utah's go-to balloon decor studio. Every event gets our full attention — the palette, the flow, the small flourishes no one else would notice. 💖
-        </p>
-        <p style={{ fontSize: 15, lineHeight: 1.7, color:'var(--fg-2)', maxWidth: 520, margin:'0 0 32px' }}>
-          From backyard baby showers to on-camera segments for Good Things Utah, we treat every event like it's our own.
-        </p>
-        <div style={{ display:'flex', gap: 16, flexWrap:'wrap' }}>
-          <Button variant="primary" size="md" onClick={onCTA}>Start your event</Button>
-          <Button variant="ghost" size="md" href="#offer" onClick={(e)=>{e.preventDefault(); document.getElementById('offer')?.scrollIntoView({ behavior:'smooth' })}}>See our work</Button>
-        </div>
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 const InstagramGrid = () => {
+  const { isMobile, isTablet } = useBreakpoint();
   const posts = [
-    { src: 'assets/ig-babyshower.jpg',   caption: 'Adding a backdrop is a good idea as welcome sign to your event 🤍 just look how stunning is this Mami 💖', tags: '#babyshower #welcomesign' },
-    { src: 'assets/ig-genderreveal.jpg', caption: 'Gender Reveal party, but a good boy stole the show at the reveal with his bows 💙 🎀', tags: '#genderreveal' },
-    { src: 'assets/ig-50party.jpg',      caption: 'How delicate are these colors for a surprise 50 party 💖', tags: '#50party #50balloons' },
-    { src: 'assets/balloon-arch-pastel-50.jpg', caption: 'Pastel dreams and marquee numbers — this 50th had us in our feelings 💗', tags: '#milestone #50' },
+    { src: IMG.ig1, caption: 'Adding a backdrop is a good idea as welcome sign to your event — just look how stunning this Mami is', tags: '#babyshower #welcomesign' },
+    { src: IMG.ig2, caption: 'Gender Reveal party, but a good boy stole the show at the reveal with his bows', tags: '#genderreveal' },
+    { src: IMG.ig3, caption: 'How delicate are these colors for a surprise 50 party', tags: '#50party #50balloons' },
+    { src: IMG.ig4, caption: 'Pastel dreams and marquee numbers — this 50th had us in our feelings', tags: '#milestone #50' },
   ];
   return (
-    <section style={{ padding: 'clamp(80px,10vw,128px) clamp(20px,4vw,56px)', background: '#fff' }}>
+    <section style={{ padding: 'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background: '#fff' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
         <div style={{ display:'flex', justifyContent:'space-between', alignItems:'flex-end', gap: 32, marginBottom: 40, flexWrap:'wrap' }}>
           <SectionIntro align="left" eyebrow="Follow along" title="Straight from" scriptWord="the studio" marginBottom={0} />
           <a href="https://instagram.com/missutahdecor" target="_blank" rel="noreferrer" style={{
             fontFamily:'var(--font-sans)', fontWeight: 700, fontSize: 12, letterSpacing:'.16em', textTransform:'uppercase',
             color:'var(--pink-500)', textDecoration:'none', display:'inline-flex', alignItems:'center', gap: 10,
+            flexShrink: 0,
           }}>
             @missutahdecor
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
         </div>
-        <div style={{ display:'grid', gridTemplateColumns:'repeat(4, 1fr)', gap: 18 }}>
+        <div style={{
+          display:'grid',
+          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gap: 18,
+        }}>
           {posts.map((p, i) => (
             <a key={i} href="https://instagram.com/missutahdecor" target="_blank" rel="noreferrer"
                style={{ textDecoration:'none', color:'inherit', display:'flex', flexDirection:'column', gap: 12 }}>
@@ -376,6 +445,7 @@ const InstagramGrid = () => {
 };
 
 const ContactBlock = ({ onSubmit }) => {
+  const { isMobile } = useBreakpoint();
   const [form, setForm] = React.useState({ first:'', last:'', email:'', phone:'', date:'', eventType:'', message:'' });
   const [sent, setSent] = React.useState(false);
   const labelStyle = { fontFamily:'var(--font-sans)', fontWeight: 600, fontSize: 12, color:'#fff', marginBottom: 6, display:'block', letterSpacing:'.08em' };
@@ -391,13 +461,19 @@ const ContactBlock = ({ onSubmit }) => {
   const eventTypes = ['Baby shower', 'Gender reveal', 'Birthday', 'Quinceañera', 'Wedding', 'Corporate', 'Other'];
 
   return (
-    <section id="contact" style={{ padding:'clamp(80px,10vw,128px) clamp(20px,4vw,56px)', background:'#fff' }}>
-      <div style={{ maxWidth: 1280, margin:'0 auto', display:'grid', gridTemplateColumns:'1fr 1.15fr', gap:'clamp(32px,6vw,80px)', alignItems:'flex-start' }}>
-        <div style={{ position:'sticky', top: 120 }}>
+    <section id="contact" style={{ padding:'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background:'#fff' }}>
+      <div style={{
+        maxWidth: 1280, margin:'0 auto',
+        display:'grid',
+        gridTemplateColumns: isMobile ? '1fr' : '1fr 1.15fr',
+        gap:'clamp(32px,6vw,80px)', alignItems:'flex-start',
+      }}>
+        {/* Sticky only on desktop — on mobile it'd overlap the form */}
+        <div style={{ position: isMobile ? 'static' : 'sticky', top: 120 }}>
           <div style={{ fontFamily:'var(--font-sans)', fontWeight: 600, fontSize: 11, letterSpacing:'.24em', textTransform:'uppercase', color:'var(--pink-500)', marginBottom: 14 }}>Say hello</div>
           <h2 style={{
             fontFamily:'var(--font-display)', fontWeight: 800, textTransform:'uppercase',
-            fontSize:'clamp(46px,5.5vw,76px)', lineHeight:.95, color:'var(--ink)', margin: 0,
+            fontSize:'clamp(36px,5.5vw,76px)', lineHeight:.95, color:'var(--ink)', margin: 0,
           }}>
             Let's make your<br />event <span style={{ fontFamily:'var(--font-script)', fontWeight:400, fontSize:'1.15em', textTransform:'none', letterSpacing: 0, color:'var(--pink-500)' }}>unforgettable.</span>
           </h2>
@@ -411,7 +487,7 @@ const ContactBlock = ({ onSubmit }) => {
               ['📍', 'Serving all of Utah', 'SLC · Provo · Park City · Ogden', null],
             ].map(([icon, bold, sub, href]) => (
               <a key={bold} href={href || '#'} onClick={(e)=>{ if(!href) e.preventDefault(); }} style={{ display:'flex', gap: 16, alignItems:'center', textDecoration:'none', color:'inherit' }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background:'var(--bg-3)', display:'grid', placeItems:'center', fontSize: 18 }}>{icon}</div>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background:'var(--bg-3)', display:'grid', placeItems:'center', fontSize: 18, flexShrink: 0 }}>{icon}</div>
                 <div>
                   <div style={{ fontFamily:'var(--font-sans)', fontWeight: 700, fontSize: 15, color:'var(--ink)' }}>{bold}</div>
                   <div style={{ fontFamily:'var(--font-sans)', fontSize: 12, color:'var(--fg-2)', letterSpacing:'.06em', marginTop: 2 }}>{sub}</div>
@@ -425,7 +501,7 @@ const ContactBlock = ({ onSubmit }) => {
           onSubmit={(e)=>{ e.preventDefault(); setSent(true); onSubmit?.(form); }}
           style={{
             background:'linear-gradient(145deg, var(--pink-500) 0%, var(--magenta-700) 100%)',
-            padding:'clamp(28px, 3vw, 40px)',
+            padding:'clamp(24px, 3vw, 40px)',
             borderRadius: 22,
             boxShadow:'0 24px 60px rgba(196,30,107,.35)',
             display:'grid', gridTemplateColumns:'1fr 1fr', gap:'16px 16px',
@@ -435,19 +511,19 @@ const ContactBlock = ({ onSubmit }) => {
           <div aria-hidden="true" style={{ position:'absolute', inset:0, background:'radial-gradient(60% 40% at 100% 0%, rgba(255,255,255,.25), transparent 60%)', pointerEvents:'none' }} />
           {sent ? (
             <div style={{ gridColumn:'1 / -1', textAlign:'center', padding:'56px 0', color:'#fff', position:'relative' }}>
-              <div style={{ fontFamily:'var(--font-script)', fontSize: 96, lineHeight: .9, color:'#fff' }}>Thank you!</div>
-              <p style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 20, marginTop: 12 }}>We'll be in touch within 24 hours 💖</p>
+              <div style={{ fontFamily:'var(--font-script)', fontSize: isMobile ? 64 : 96, lineHeight: .9, color:'#fff' }}>Thank you!</div>
+              <p style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 20, marginTop: 12 }}>We'll be in touch within 24 hours</p>
               <div style={{ marginTop: 24, fontFamily:'var(--font-sans)', fontSize: 12, letterSpacing:'.18em', textTransform:'uppercase' }}>— Miss Utah Decor</div>
             </div>
           ) : (<>
             <div style={{ gridColumn:'1 / -1', position:'relative' }}>
               <div style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 22, color:'#fff', marginBottom: 20 }}>Tell us about your event</div>
             </div>
-            <div style={{ position:'relative' }}>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
               <Lab>First name</Lab>
               <input value={form.first} onChange={e=>setForm({...form,first:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
-            <div style={{ position:'relative' }}>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
               <Lab>Last name</Lab>
               <input value={form.last} onChange={e=>setForm({...form,last:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
@@ -455,11 +531,11 @@ const ContactBlock = ({ onSubmit }) => {
               <Lab>Email</Lab>
               <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
-            <div style={{ position:'relative' }}>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
               <Lab>Phone</Lab>
               <input type="tel" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
             </div>
-            <div style={{ position:'relative' }}>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
               <Lab>Event date</Lab>
               <input type="date" value={form.date} onChange={e=>setForm({...form,date:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
             </div>
@@ -508,7 +584,6 @@ const ContactBlock = ({ onSubmit }) => {
   );
 };
 
-// Sticky floating CTA (appears after scrolling past hero)
 const StickyCTA = ({ onClick }) => {
   const [show, setShow] = React.useState(false);
   React.useEffect(() => {

@@ -11,7 +11,7 @@ const HeroMarquee = () => {
   const row = [...items, ...items, ...items];
   return (
     <div style={{
-      position: 'absolute', top: 86, left: 0, right: 0, zIndex: 3,
+      position: 'absolute', top: 70, left: 0, right: 0, zIndex: 3,
       padding: '10px 0', overflow: 'hidden',
       background: 'rgba(14,10,12,.28)',
       backdropFilter: 'blur(6px)',
@@ -39,7 +39,6 @@ const HeroMarquee = () => {
   );
 };
 
-// Tiny decorative floating balloons (SVG, light)
 const FloatingBalloon = ({ size = 60, color = '#EC4899', top = '20%', left = '10%', delay = 0, dur = 8 }) => (
   <div aria-hidden="true" style={{
     position: 'absolute', top, left, zIndex: 2,
@@ -63,10 +62,12 @@ const FloatingBalloon = ({ size = 60, color = '#EC4899', top = '20%', left = '10
 );
 
 const Hero = ({ onCTA }) => {
+  const { isMobile } = useBreakpoint();
   const mouseRef = React.useRef({ x: 0, y: 0 });
   const bgRef = React.useRef(null);
 
   React.useEffect(() => {
+    if (isMobile) return; // skip parallax on touch — mousemove never fires anyway
     const move = (e) => {
       const cx = window.innerWidth / 2, cy = window.innerHeight / 2;
       mouseRef.current = { x: (e.clientX - cx) / cx, y: (e.clientY - cy) / cy };
@@ -76,21 +77,21 @@ const Hero = ({ onCTA }) => {
     };
     window.addEventListener('mousemove', move);
     return () => window.removeEventListener('mousemove', move);
-  }, []);
+  }, [isMobile]);
 
   return (
     <section style={{
-      position: 'relative', height: '100vh', minHeight: 720,
+      position: 'relative', height: '100vh', minHeight: isMobile ? 600 : 720,
       overflow: 'hidden', background: '#0E0A0C',
       isolation: 'isolate',
     }}>
-      {/* Billboard photo */}
+      {/* Billboard photo — placeholder until real assets are dropped in */}
       <div
         ref={bgRef}
         aria-hidden="true"
         style={{
           position: 'absolute', inset: '-4%', zIndex: 0,
-          backgroundImage: 'url(assets/balloon-arch-pink-silver.png)',
+          backgroundImage: 'url(https://picsum.photos/seed/pinkarches/1920/1080)',
           backgroundSize: 'cover', backgroundPosition: 'center 40%',
           transform: 'scale(1.08)',
           transition: 'transform 800ms cubic-bezier(.22,.61,.36,1)',
@@ -98,7 +99,6 @@ const Hero = ({ onCTA }) => {
         }}
       />
 
-      {/* Top: soft glow to brighten the "entrance" */}
       <div aria-hidden="true" style={{
         position: 'absolute', inset: 0, zIndex: 1,
         background: `
@@ -108,78 +108,79 @@ const Hero = ({ onCTA }) => {
         `,
       }} />
 
-      {/* Spotlight for headline legibility */}
       <div aria-hidden="true" style={{
         position: 'absolute', left: '-8%', bottom: '-15%', width: '70%', height: '90%', zIndex: 1,
         background: 'radial-gradient(closest-side, rgba(196,30,107,.35), transparent 70%)',
         filter: 'blur(30px)',
       }} />
 
-      {/* Corner floating balloons */}
-      <FloatingBalloon size={48} color="#F472B6" top="18%" left="6%" delay={0} dur={9} />
-      <FloatingBalloon size={36} color="#FBCFE8" top="30%" left="92%" delay={1.5} dur={11} />
-      <FloatingBalloon size={56} color="#C41E6B" top="60%" left="88%" delay={0.8} dur={10} />
-      <FloatingBalloon size={28} color="#E4C978" top="68%" left="4%" delay={2.2} dur={12} />
-      <FloatingBalloon size={40} color="#B79CD1" top="14%" left="78%" delay={0.4} dur={13} />
+      {/* Floating balloons — fewer and smaller on mobile */}
+      {!isMobile && <FloatingBalloon size={48} color="#F472B6" top="18%" left="6%" delay={0} dur={9} />}
+      <FloatingBalloon size={isMobile ? 28 : 36} color="#FBCFE8" top="30%" left="90%" delay={1.5} dur={11} />
+      {!isMobile && <FloatingBalloon size={56} color="#C41E6B" top="60%" left="88%" delay={0.8} dur={10} />}
+      {!isMobile && <FloatingBalloon size={28} color="#E4C978" top="68%" left="4%" delay={2.2} dur={12} />}
+      <FloatingBalloon size={isMobile ? 28 : 40} color="#B79CD1" top="14%" left={isMobile ? '82%' : '78%'} delay={0.4} dur={13} />
 
-      {/* Marquee under header */}
       <HeroMarquee />
 
-      {/* Left ornamental vertical label */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', left: 'clamp(20px, 3vw, 40px)', top: '52%', transform: 'translateY(-50%)',
-        zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
-        color: 'rgba(255,255,255,.8)',
-      }}>
-        <span style={{ width: 1, height: 64, background: 'rgba(255,255,255,.4)' }} />
-        <span style={{
-          fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 10,
-          letterSpacing: '.4em', textTransform: 'uppercase',
-          writingMode: 'vertical-rl', transform: 'rotate(180deg)',
-        }}>Salt Lake City · Utah</span>
-        <span style={{ width: 1, height: 64, background: 'rgba(255,255,255,.4)' }} />
-      </div>
-
-      {/* Right: Instagram vertical cue */}
-      <a
-        href="https://instagram.com/missutahdecor"
-        target="_blank"
-        rel="noreferrer"
-        style={{
-          position: 'absolute', right: 'clamp(20px, 3vw, 40px)', top: '50%', transform: 'translateY(-50%)',
+      {/* Side vertical labels — hidden on mobile (they'd eat content space) */}
+      {!isMobile && (
+        <div aria-hidden="true" style={{
+          position: 'absolute', left: 'clamp(20px, 3vw, 40px)', top: '52%', transform: 'translateY(-50%)',
           zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
-          color: 'rgba(255,255,255,.85)', textDecoration: 'none',
-        }}
-      >
-        <span style={{ width: 1, height: 56, background: 'rgba(255,255,255,.4)' }} />
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
-          <rect x="3" y="3" width="18" height="18" rx="5"/>
-          <circle cx="12" cy="12" r="4"/>
-          <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
-        </svg>
-        <span style={{
-          fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 10,
-          letterSpacing: '.4em', textTransform: 'uppercase',
-          writingMode: 'vertical-rl',
-        }}>@missutahdecor</span>
-        <span style={{ width: 1, height: 56, background: 'rgba(255,255,255,.4)' }} />
-      </a>
+          color: 'rgba(255,255,255,.8)',
+        }}>
+          <span style={{ width: 1, height: 64, background: 'rgba(255,255,255,.4)' }} />
+          <span style={{
+            fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 10,
+            letterSpacing: '.4em', textTransform: 'uppercase',
+            writingMode: 'vertical-rl', transform: 'rotate(180deg)',
+          }}>Salt Lake City · Utah</span>
+          <span style={{ width: 1, height: 64, background: 'rgba(255,255,255,.4)' }} />
+        </div>
+      )}
+
+      {!isMobile && (
+        <a
+          href="https://instagram.com/missutahdecor"
+          target="_blank"
+          rel="noreferrer"
+          style={{
+            position: 'absolute', right: 'clamp(20px, 3vw, 40px)', top: '50%', transform: 'translateY(-50%)',
+            zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
+            color: 'rgba(255,255,255,.85)', textDecoration: 'none',
+          }}
+        >
+          <span style={{ width: 1, height: 56, background: 'rgba(255,255,255,.4)' }} />
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6">
+            <rect x="3" y="3" width="18" height="18" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+          </svg>
+          <span style={{
+            fontFamily: 'var(--font-sans)', fontWeight: 600, fontSize: 10,
+            letterSpacing: '.4em', textTransform: 'uppercase',
+            writingMode: 'vertical-rl',
+          }}>@missutahdecor</span>
+          <span style={{ width: 1, height: 56, background: 'rgba(255,255,255,.4)' }} />
+        </a>
+      )}
 
       {/* Main content — bottom-left anchored */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 3,
         display: 'flex', alignItems: 'flex-end',
-        padding: '0 clamp(20px, 4vw, 72px) clamp(48px, 6vw, 88px)',
+        padding: `0 clamp(20px, 4vw, 72px) clamp(40px, 6vw, 88px)`,
       }}>
         <div style={{ maxWidth: 1320, margin: '0 auto', width: '100%' }}>
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 14, marginBottom: 28,
+            display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20,
             animation: 'mud-hero-rise 700ms 100ms cubic-bezier(.22,.61,.36,1) both',
           }}>
-            <span style={{ width: 60, height: 1, background: 'var(--pink-200)' }} />
+            <span style={{ width: 40, height: 1, background: 'var(--pink-200)' }} />
             <span style={{
               fontFamily: 'var(--font-sans)', fontWeight: 600,
-              fontSize: 11, letterSpacing: '.36em', textTransform: 'uppercase',
+              fontSize: isMobile ? 10 : 11, letterSpacing: '.36em', textTransform: 'uppercase',
               color: 'var(--pink-100)',
               textShadow: '0 1px 10px rgba(0,0,0,.5)',
             }}>Utah's Premier Balloon &amp; Event Decor</span>
@@ -187,7 +188,8 @@ const Hero = ({ onCTA }) => {
 
           <h1 style={{
             fontFamily: 'var(--font-display)', fontWeight: 800,
-            fontSize: 'clamp(58px, 9vw, 148px)', lineHeight: .88,
+            fontSize: isMobile ? 'clamp(40px, 12vw, 58px)' : 'clamp(58px, 9vw, 148px)',
+            lineHeight: .88,
             letterSpacing: '-.005em', textTransform: 'uppercase',
             color: '#fff', margin: 0, maxWidth: 1100,
             textShadow: '0 3px 30px rgba(0,0,0,.55)',
@@ -197,10 +199,7 @@ const Hero = ({ onCTA }) => {
               <span style={{ display:'inline-block', animation: 'mud-hero-rise 900ms 300ms cubic-bezier(.22,.61,.36,1) both' }}>Your Party,</span>
             </span>
             <span style={{ display:'block', overflow: 'hidden' }}>
-              <span style={{
-                display:'inline-block',
-                animation: 'mud-hero-rise 900ms 420ms cubic-bezier(.22,.61,.36,1) both',
-              }}>
+              <span style={{ display:'inline-block', animation: 'mud-hero-rise 900ms 420ms cubic-bezier(.22,.61,.36,1) both' }}>
                 <span style={{
                   background: 'linear-gradient(180deg, #ffffff 0%, #FBCFE8 60%, #F472B6 100%)',
                   WebkitBackgroundClip: 'text', backgroundClip: 'text',
@@ -210,10 +209,9 @@ const Hero = ({ onCTA }) => {
             </span>
           </h1>
 
-          {/* Script sign-off */}
           <div style={{
             marginTop: 14, maxWidth: 680,
-            fontFamily: 'var(--font-script)', fontSize: 'clamp(36px, 4vw, 56px)',
+            fontFamily: 'var(--font-script)', fontSize: isMobile ? 'clamp(28px, 6vw, 40px)' : 'clamp(36px, 4vw, 56px)',
             lineHeight: 1, color: 'var(--pink-200)',
             textShadow: '0 2px 20px rgba(0,0,0,.55)',
             animation: 'mud-hero-rise 900ms 600ms cubic-bezier(.22,.61,.36,1) both',
@@ -223,10 +221,11 @@ const Hero = ({ onCTA }) => {
 
           {/* CTA row */}
           <div style={{
-            marginTop: 40, display: 'flex', gap: 20, alignItems: 'center', flexWrap: 'wrap',
+            marginTop: isMobile ? 28 : 40,
+            display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap',
             animation: 'mud-hero-rise 900ms 780ms cubic-bezier(.22,.61,.36,1) both',
           }}>
-            <Button variant="primary" size="xl" onClick={onCTA}>
+            <Button variant="primary" size={isMobile ? 'md' : 'xl'} onClick={onCTA}>
               Lets Party
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 12h14M13 5l7 7-7 7"/>
@@ -245,23 +244,27 @@ const Hero = ({ onCTA }) => {
               <span style={{
                 width: 38, height: 38, borderRadius: 999, display: 'grid', placeItems: 'center',
                 border: '1.5px solid rgba(255,255,255,.5)',
+                flexShrink: 0,
               }}>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
                   <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
                 </svg>
               </span>
-              <span>
-                Call (385) 439-5050
-                <span style={{ display:'block', fontWeight: 400, fontSize: 10, letterSpacing: '.14em', opacity: .75, marginTop: 3 }}>
-                  or text — we answer fast
+              {!isMobile && (
+                <span>
+                  Call (385) 439-5050
+                  <span style={{ display:'block', fontWeight: 400, fontSize: 10, letterSpacing: '.14em', opacity: .75, marginTop: 3 }}>
+                    or text — we answer fast
+                  </span>
                 </span>
-              </span>
+              )}
             </a>
           </div>
 
-          {/* Tagline row — quick stats as a small trust proof inside the hero */}
+          {/* Trust stats */}
           <div style={{
-            marginTop: 56, display: 'flex', gap: 'clamp(24px, 4vw, 56px)', flexWrap: 'wrap',
+            marginTop: isMobile ? 32 : 56,
+            display: 'flex', gap: 'clamp(20px, 4vw, 56px)', flexWrap: 'wrap',
             animation: 'mud-hero-rise 900ms 960ms cubic-bezier(.22,.61,.36,1) both',
           }}>
             {[
@@ -271,11 +274,11 @@ const Hero = ({ onCTA }) => {
             ].map(([k, v]) => (
               <div key={k} style={{ color: 'rgba(255,255,255,.9)' }}>
                 <div style={{
-                  fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: 22,
+                  fontFamily: 'var(--font-display)', fontWeight: 800, fontSize: isMobile ? 18 : 22,
                   color: '#fff',
                 }}>{k}</div>
                 <div style={{
-                  fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11,
+                  fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 10,
                   letterSpacing: '.2em', textTransform: 'uppercase',
                   color: 'var(--pink-100)', marginTop: 4,
                 }}>{v}</div>
@@ -285,15 +288,17 @@ const Hero = ({ onCTA }) => {
         </div>
       </div>
 
-      {/* Scroll nudge */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', bottom: 24, right: 'clamp(72px, 6vw, 110px)', zIndex: 3,
-        display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-        color: '#fff', opacity: .7,
-      }}>
-        <span style={{ fontSize: 9, letterSpacing: '.36em', textTransform: 'uppercase' }}>Scroll</span>
-        <span style={{ width: 1, height: 44, background: 'linear-gradient(to bottom, #fff, transparent)', animation: 'mud-scroll-tick 1.8s ease-in-out infinite' }} />
-      </div>
+      {/* Scroll nudge — desktop only */}
+      {!isMobile && (
+        <div aria-hidden="true" style={{
+          position: 'absolute', bottom: 24, right: 'clamp(72px, 6vw, 110px)', zIndex: 3,
+          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+          color: '#fff', opacity: .7,
+        }}>
+          <span style={{ fontSize: 9, letterSpacing: '.36em', textTransform: 'uppercase' }}>Scroll</span>
+          <span style={{ width: 1, height: 44, background: 'linear-gradient(to bottom, #fff, transparent)', animation: 'mud-scroll-tick 1.8s ease-in-out infinite' }} />
+        </div>
+      )}
 
       <style>{`
         @keyframes mud-hero-kb {

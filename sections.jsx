@@ -444,10 +444,14 @@ const InstagramGrid = () => {
   );
 };
 
+const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xwvajqnr';
+
 const ContactBlock = ({ onSubmit }) => {
   const { isMobile } = useBreakpoint();
   const [form, setForm] = React.useState({ first:'', last:'', email:'', phone:'', date:'', eventType:'', message:'' });
   const [sent, setSent] = React.useState(false);
+  const [sending, setSending] = React.useState(false);
+  const [error, setError] = React.useState(null);
   const labelStyle = { fontFamily:'var(--font-sans)', fontWeight: 600, fontSize: 12, color:'#fff', marginBottom: 6, display:'block', letterSpacing:'.08em' };
   const inputStyle = {
     fontFamily:'var(--font-sans)', fontSize: 15,
@@ -498,7 +502,33 @@ const ContactBlock = ({ onSubmit }) => {
         </div>
 
         <form
-          onSubmit={(e)=>{ e.preventDefault(); setSent(true); onSubmit?.(form); }}
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setSending(true);
+            setError(null);
+            try {
+              const res = await fetch(FORMSPREE_ENDPOINT, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify({
+                  name: `${form.first} ${form.last}`,
+                  email: form.email,
+                  phone: form.phone,
+                  date: form.date,
+                  eventType: form.eventType,
+                  message: form.message,
+                }),
+              });
+              const data = await res.json();
+              if (!res.ok) throw new Error(data?.error || 'Submission failed');
+              setSent(true);
+              onSubmit?.(form);
+            } catch (err) {
+              setError('Something went wrong — please try again or email us directly.');
+            } finally {
+              setSending(false);
+            }
+          }}
           style={{
             background:'linear-gradient(145deg, var(--pink-500) 0%, var(--magenta-700) 100%)',
             padding:'clamp(24px, 3vw, 40px)',
@@ -560,21 +590,27 @@ const ContactBlock = ({ onSubmit }) => {
               <Lab>Tell us the vibe</Lab>
               <textarea rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={{...inputStyle, resize:'none'}} placeholder="Colors, venue, guest count, inspiration photos…" required />
             </div>
+            {error && (
+              <div style={{ gridColumn:'1 / -1', background:'rgba(0,0,0,.25)', borderRadius: 10, padding:'12px 16px', color:'#fff', fontSize: 13, textAlign:'center' }}>
+                {error}
+              </div>
+            )}
             <div style={{ gridColumn:'1 / -1', display:'flex', justifyContent:'center', marginTop: 10, position:'relative' }}>
-              <button type="submit" style={{
+              <button type="submit" disabled={sending} style={{
                 fontFamily:'var(--font-sans)', fontWeight: 800,
                 fontSize: 13, letterSpacing:'.18em', textTransform:'uppercase',
                 color:'var(--pink-500)', background:'#fff', border:'none',
                 borderRadius: 999, padding:'20px 44px',
-                boxShadow:'0 10px 28px rgba(0,0,0,.2)', cursor:'pointer',
-                transition:'transform 220ms cubic-bezier(.34,1.56,.64,1)',
+                boxShadow:'0 10px 28px rgba(0,0,0,.2)', cursor: sending ? 'default' : 'pointer',
+                opacity: sending ? 0.7 : 1,
+                transition:'transform 220ms cubic-bezier(.34,1.56,.64,1), opacity 160ms',
                 display:'inline-flex', alignItems:'center', gap: 10,
               }}
-                onMouseEnter={e=>e.currentTarget.style.transform='translateY(-3px)'}
+                onMouseEnter={e=>{ if (!sending) e.currentTarget.style.transform='translateY(-3px)'; }}
                 onMouseLeave={e=>e.currentTarget.style.transform='translateY(0)'}
               >
-                Let's celebrate!
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                {sending ? 'Sending…' : "Let's celebrate!"}
+                {!sending && <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>}
               </button>
             </div>
           </>)}

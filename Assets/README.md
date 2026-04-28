@@ -1,47 +1,87 @@
 # Assets
 
-Static assets for the Miss Utah Decor site. Folder structure groups files by use, not by file type.
+Static assets for the Miss Utah Decor site. Folder structure groups files by use, not by file type. Cohesive multi-shot sets from a single event get their own subfolder under `gallery/`.
 
 ```
 assets/
-├── logo.png                            Header / footer logo (PNG, transparent)
-├── manifest.json                       Machine-readable index of every asset (alt, dims, usage)
-├── README.md                           This file
+├── logo.png                                    Header / footer logo (PNG, transparent)
+├── manifest.json                               Machine-readable index of every asset
+├── README.md                                   This file
 ├── hero/
-│   ├── hero.mp4                        Desktop billboard video (720p, ~1.1MB, no audio)
-│   └── hero-poster.jpg                 Poster frame; also used as mobile background
+│   ├── hero.mp4                                Available — 720p ~1.1MB, no audio (current hero is image-only)
+│   └── hero-poster.jpg                         Active hero — celestial blue/silver/purple Ken Burns
 ├── gallery/
-│   ├── balloon-arch-pink-silver.jpg    Balloon Arches tile + IG post 4
-│   ├── backdrop-sage-its-a-boy.jpg     Backdrops tile + WeMakeIt feature panel
-│   ├── babyshower-oh-baby.jpg          Florals tile (placeholder) + IG post 1
-│   ├── gender-reveal-boy-or-girl.jpg   Grab 'n Go tile + IG post 2
-│   └── milestone-50-pastel.jpg         Milestone Numbers tile + IG post 3
+│   ├── babyshower-oh-baby.jpg                  IG post 1
+│   ├── backdrop-sage-its-a-boy.jpg             Backdrops tile + WeMakeIt feature
+│   ├── balloon-arch-pink-silver.jpg            Balloon Arches tile + IG post 4
+│   ├── balloon-bouquet-welcome-home.jpg        Grab 'n Go tile
+│   ├── bouquet-roses-handheld.jpg              Florals tile
+│   ├── disney-princess-belle-cinderella.jpg    Available
+│   ├── disney-princess-once-upon-a-time.jpg    Available
+│   ├── eid-mubarak-crescent-minimalist.jpg     Available
+│   ├── eid-mubarak-mosque-emerald.jpg          Available
+│   ├── engagement-she-said-yes-white.jpg       Available
+│   ├── first-bday-circus-tent.jpg              Available
+│   ├── first-bday-mermaid-carriage.jpg         Available — was uploaded as "new hero image"
+│   ├── first-bday-mickey-mouse.jpg             Available
+│   ├── first-bday-train-blue-white.jpg         Available
+│   ├── gender-reveal-boy-or-girl.jpg           IG post 2
+│   ├── marquee-8th-birthday-pink-purple.jpg    Available
+│   ├── marquee-corporate-40-years.jpg          Available
+│   ├── marquee-name-anavay-lavender.jpg        Available
+│   ├── milestone-50-pastel.jpg                 Milestone Numbers tile + IG post 3
+│   ├── outdoor-picnic-pastel-florals.jpg       Available
+│   ├── valentines-all-you-need-is-love.jpg     Available
+│   ├── wedding-burgundy-cream-florals.jpg      Available
+│   └── spring-in-bloom/                        Easter event set (8 shots)
+│       ├── backdrop-wide.jpg
+│       ├── backdrop-front.jpg
+│       ├── backdrop-angle.jpg
+│       ├── portrait-butterfly.jpg
+│       ├── florals-archway-cluster.jpg
+│       ├── florals-corner.jpg
+│       ├── butterfly-side.jpg
+│       └── butterfly-wing-detail.jpg
 └── press/
-    └── tv-good-things-utah.jpg         "As seen on" thumbnail in WeMakeIt
+    └── tv-good-things-utah.jpg                 "As seen on" thumbnail in WeMakeIt
 ```
+
+## Naming convention
+
+`kebab-case-descriptive.jpg` — describe the content, not the source. The folder tells you the role; the filename tells you the subject.
+
+Use category prefixes when they recur, so similar shots cluster alphabetically:
+
+- `first-bday-*` — first birthday parties (theme follows the prefix)
+- `marquee-*` — events anchored on lit marquee letters/numbers
+- `eid-mubarak-*`, `valentines-*`, etc. — holiday-named events
+- `wedding-*`, `engagement-*`, `babyshower-*`, `gender-reveal-*` — life-event categories
+
+For multi-shot event sets (an Easter event with 8 shots, a wedding with 12, etc.), create a subfolder under `gallery/` named for the event in kebab-case. Inside, use role-prefixed names: `backdrop-`, `portrait-`, `florals-`, `detail-`. Keep the event name out of the inner filenames — the folder already says it.
 
 ## Adding a new asset
 
-1. Drop the source file in the matching subfolder (`gallery/`, `press/`, etc.).
-2. Name it `kebab-case-descriptive.jpg` — describe content, not source (`balloon-arch-pink-silver.jpg`, not `IMG_7565.jpg`).
-3. Optimize before committing:
+1. Drop the source in the matching subfolder. For event sets, create `gallery/<event-kebab>/`.
+2. Run optimization:
    ```bash
-   # photos: convert to JPG, max 1600px, q82 progressive
-   convert input.png -resize "1600x1600>" -strip -quality 82 -interlace Plane out.jpg
+   convert input.JPG -auto-orient -resize "1600x1600>" -strip -quality 82 -interlace Plane out.jpg
    ```
-4. Add an entry to `manifest.json` with width, height, alt text, and where it's used.
-5. Reference it in `sections.jsx` via the `IMG` map and add matching `ALT` copy.
+3. Add an entry to `manifest.json` with `path`, `type`, dimensions, `alt`, `used_in`, and `source`.
+4. If wiring it into the site, reference it in `sections.jsx` via the `IMG` map and add matching `ALT` copy.
+
+## HEIC files
+
+Drop them in `_pending-conversion/` at the project root, then double-click `convert-heic.command` to batch-convert via macOS `sips` (HEIC isn't supported in this build pipeline). The script is re-runnable and skips files it's already processed.
 
 ## Why JPG over PNG for photos
 
-The originals were 2.7–6 MB PNGs of photographs — PNGs are lossless and bloated for that content. The optimized JPGs are 220–340 KB at the same display quality. Total assets dropped from 25 MB to 2.9 MB.
+JPG q82 progressive is 5–30× smaller than PNG for photographic content with no visible quality loss. PNG stays for the logo only (transparency).
 
-PNG stays for the logo only (transparency required, already small).
+## Optimization budget
 
-## Why a separate `hero/` folder
-
-The hero video and its poster are tightly coupled — the poster is the fallback for the `<video>` tag and the mobile background. Keeping them adjacent makes that relationship obvious at a glance.
-
-## Open slots
-
-Two category tiles currently reuse gallery photos because there's no dedicated shot yet — see `open_slots` in `manifest.json`. Replace when better photography is available.
+| Use | Format | Max dimension | Target size |
+| --- | --- | --- | --- |
+| Logo | PNG | actual | <100 KB |
+| Gallery photo | JPG q82 | 1600 px long edge | <500 KB |
+| Hero poster | JPG q82 | 1280 px long edge | <250 KB |
+| Hero video | H.264 yuv420p | 720p, faststart | <2 MB |

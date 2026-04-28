@@ -5,9 +5,9 @@
 const IMG = {
   archTall:    'assets/gallery/balloon-arch-pink-silver.jpg',
   backdrops:   'assets/gallery/backdrop-sage-its-a-boy.jpg',
-  florals:     'assets/gallery/babyshower-oh-baby.jpg',
+  florals:     'assets/gallery/bouquet-roses-handheld.jpg',
   milestone:   'assets/gallery/milestone-50-pastel.jpg',
-  grabgo:      'assets/gallery/gender-reveal-boy-or-girl.jpg',
+  grabgo:      'assets/gallery/balloon-bouquet-welcome-home.jpg',
   featureMake: 'assets/gallery/backdrop-sage-its-a-boy.jpg',
   tvApp:       'assets/press/tv-good-things-utah.jpg',
   ig1:         'assets/gallery/babyshower-oh-baby.jpg',
@@ -21,9 +21,9 @@ const IMG = {
 const ALT = {
   archTall:    'Pink and silver balloon arch with neon Happy Birthday sign and disco wall',
   backdrops:   'Sage green and cream balloon backdrop with an It’s a Boy cart',
-  florals:     'Cream and sage Oh Baby! baby shower with neon arch and pampas florals',
+  florals:     'Hand-tied red rose bouquet wrapped in cream paper',
   milestone:   'Pastel pink and lavender 50th birthday balloon arch with marquee numbers',
-  grabgo:      'Boy or Girl gender reveal setup with pampas, balloons and bulldog ring bearer',
+  grabgo:      'Silver and gold Welcome Home balloon bouquet for a military homecoming',
   featureMake: 'Mother-daughter studio at work — sage balloon backdrop in progress',
   tvApp:       'Miss Utah Decor team featured on the Good Things Utah TV set',
   ig1:         'Oh Baby! welcome sign and balloon backdrop for a baby shower',

@@ -1,16 +1,17 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "name": "Miss Utah Decor — Site Assets",
-  "version": "1.0.0",
-  "updated": "2026-04-27",
+  "version": "1.2.0",
+  "updated": "2026-04-28",
   "convention": {
     "naming": "kebab-case, descriptive (event-type-or-color-palette)",
     "case": "lowercase folders + filenames; case-sensitive servers will fail otherwise",
+    "subfolders": "gallery/<event-name>/ for cohesive multi-shot sets; otherwise flat under gallery/",
     "formats": {
-      "photos": "JPG q82 progressive, max 1600px on long edge",
+      "photos": "JPG q82 progressive, max 1600px on long edge, EXIF stripped (auto-orient applied first)",
       "logo": "PNG with transparency",
       "video": "MP4 H.264 yuv420p, faststart, 720p",
-      "poster": "JPG q82, 1280px wide"
+      "poster": "JPG q82, max 1280px on long edge"
     }
   },
   "assets": {
@@ -20,7 +21,7 @@
       "width": 721,
       "height": 321,
       "alt": "Miss Utah Decor",
-      "usage": ["header logo via shared.jsx Logo component", "footer"],
+      "used_in": ["header logo via shared.jsx Logo component", "footer"],
       "notes": "Keep PNG for transparency; only ~84KB so no need to convert."
     },
     "hero.video": {
@@ -30,16 +31,17 @@
       "height": 1280,
       "duration_s": 6.67,
       "poster": "assets/hero/hero-poster.jpg",
-      "usage": ["hero.jsx — desktop billboard background"],
-      "notes": "Vertical 9:16 source; cropped via object-fit on render. Mobile uses poster-only to save data."
+      "used_in": ["available — current hero.jsx uses a static Ken Burns image, not the video"],
+      "notes": "Vertical 9:16, no audio. Kept in case the hero is restored to a video treatment."
     },
     "hero.poster": {
       "path": "assets/hero/hero-poster.jpg",
       "type": "image/jpeg",
-      "width": 1280,
-      "height": 2276,
-      "alt": "Pink and gold balloon arch with neon Happy Birthday sign",
-      "usage": ["hero.jsx — mobile background, video poster fallback"]
+      "width": 960,
+      "height": 1280,
+      "alt": "Blue, silver and purple balloon arch with star and moon foil accents in a marble entryway",
+      "used_in": ["hero.jsx — Ken Burns background"],
+      "notes": "Replaced 2026-04-28 — was the pink/gold poster, now a celestial blue/silver/purple arch."
     },
     "gallery.balloon-arch-pink-silver": {
       "path": "assets/gallery/balloon-arch-pink-silver.jpg",
@@ -47,7 +49,7 @@
       "width": 1440,
       "height": 1149,
       "alt": "Pink and silver balloon arch with neon Happy Birthday sign and disco wall",
-      "usage": [
+      "used_in": [
         "CategoryGrid → Balloon Arches tile (tall)",
         "InstagramGrid → post 4"
       ]
@@ -58,7 +60,7 @@
       "width": 1200,
       "height": 1600,
       "alt": "Sage green and cream balloon backdrop with an It's a Boy cart",
-      "usage": [
+      "used_in": [
         "CategoryGrid → Backdrops tile",
         "WeMakeIt → feature panel (4:5 crop)"
       ]
@@ -69,10 +71,7 @@
       "width": 1282,
       "height": 1600,
       "alt": "Cream and sage Oh Baby! baby shower with neon arch and pampas florals",
-      "usage": [
-        "CategoryGrid → Florals tile (placeholder until a dedicated florals shot ships)",
-        "InstagramGrid → post 1"
-      ]
+      "used_in": ["InstagramGrid → post 1"]
     },
     "gallery.gender-reveal-boy-or-girl": {
       "path": "assets/gallery/gender-reveal-boy-or-girl.jpg",
@@ -80,10 +79,7 @@
       "width": 1280,
       "height": 1600,
       "alt": "Boy or Girl gender reveal setup with pampas, balloons and bulldog ring bearer",
-      "usage": [
-        "CategoryGrid → Grab 'n Go tile",
-        "InstagramGrid → post 2"
-      ]
+      "used_in": ["InstagramGrid → post 2"]
     },
     "gallery.milestone-50-pastel": {
       "path": "assets/gallery/milestone-50-pastel.jpg",
@@ -91,10 +87,109 @@
       "width": 1440,
       "height": 1440,
       "alt": "Pastel pink and lavender 50th birthday balloon arch with marquee numbers",
-      "usage": [
+      "used_in": [
         "CategoryGrid → Milestone Numbers tile",
         "InstagramGrid → post 3"
       ]
+    },
+    "gallery.bouquet-roses-handheld": {
+      "path": "assets/gallery/bouquet-roses-handheld.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Hand-tied red rose bouquet wrapped in cream paper, held by woman in tan dress",
+      "source": "Floral.png (4.4 MB → 186 KB)",
+      "used_in": ["CategoryGrid → Florals tile (replaced placeholder 2026-04-28)"]
+    },
+    "gallery.balloon-bouquet-welcome-home": {
+      "path": "assets/gallery/balloon-bouquet-welcome-home.jpg",
+      "type": "image/jpeg",
+      "width": 1015,
+      "height": 1600,
+      "alt": "Silver and gold Welcome Home balloon bouquet with confetti balloons for a military homecoming",
+      "source": "IMG_3435.PNG (508 KB → 247 KB)",
+      "used_in": ["CategoryGrid → Grab 'n Go tile (replaced placeholder 2026-04-28)"]
+    },
+    "gallery.marquee-8th-birthday-pink-purple": {
+      "path": "assets/gallery/marquee-8th-birthday-pink-purple.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Pink and purple Happy Birthday balloon arch with lit marquee number 8 and basketball-themed cake",
+      "source": "772a5e61-…-2151531e5779.jpg (1.6 MB → 375 KB)",
+      "used_in": ["available — not yet referenced in code"]
+    },
+    "gallery.spring-in-bloom.backdrop-wide": {
+      "path": "assets/gallery/spring-in-bloom/backdrop-wide.jpg",
+      "type": "image/jpeg",
+      "width": 1600,
+      "height": 1067,
+      "alt": "Spring in Bloom Easter backdrop — pastel paper flowers, butterfly lights, neon sign, bunny figures and gold eggs",
+      "source": "DSC00029.JPG (6.6 MB → 292 KB)",
+      "used_in": ["available — strong wide-shot hero candidate"]
+    },
+    "gallery.spring-in-bloom.backdrop-front": {
+      "path": "assets/gallery/spring-in-bloom/backdrop-front.jpg",
+      "type": "image/jpeg",
+      "width": 1600,
+      "height": 1067,
+      "alt": "Spring in Bloom backdrop straight-on — floral arches, butterfly lights and Easter pastel egg foreground",
+      "source": "DSC00035.JPG (6.7 MB → 318 KB)",
+      "used_in": ["available"]
+    },
+    "gallery.spring-in-bloom.backdrop-angle": {
+      "path": "assets/gallery/spring-in-bloom/backdrop-angle.jpg",
+      "type": "image/jpeg",
+      "width": 1600,
+      "height": 1067,
+      "alt": "Spring in Bloom backdrop side angle — three-quarter view with butterfly wing detail",
+      "source": "DSC00163.JPG (6.5 MB → 292 KB)",
+      "used_in": ["available"]
+    },
+    "gallery.spring-in-bloom.portrait-butterfly": {
+      "path": "assets/gallery/spring-in-bloom/portrait-butterfly.jpg",
+      "type": "image/jpeg",
+      "width": 1067,
+      "height": 1600,
+      "alt": "Spring in Bloom — vertical portrait of glowing butterfly wing against floral arch with neon Spring in Bloom sign",
+      "source": "DSC00100.JPG (6.0 MB → 270 KB)",
+      "used_in": ["available — fits 4:5 or 9:16 layouts"]
+    },
+    "gallery.spring-in-bloom.florals-archway-cluster": {
+      "path": "assets/gallery/spring-in-bloom/florals-archway-cluster.jpg",
+      "type": "image/jpeg",
+      "width": 1067,
+      "height": 1600,
+      "alt": "Lush pastel floral cluster crowning the top of the Spring in Bloom archway",
+      "source": "DSC00121.JPG (6.6 MB → 307 KB)",
+      "used_in": ["available"]
+    },
+    "gallery.spring-in-bloom.florals-corner": {
+      "path": "assets/gallery/spring-in-bloom/florals-corner.jpg",
+      "type": "image/jpeg",
+      "width": 1067,
+      "height": 1600,
+      "alt": "Spring in Bloom corner detail — yellow, pink and blue florals against the white arch",
+      "source": "DSC00175.JPG (5.7 MB → 256 KB)",
+      "used_in": ["available"]
+    },
+    "gallery.spring-in-bloom.butterfly-side": {
+      "path": "assets/gallery/spring-in-bloom/butterfly-side.jpg",
+      "type": "image/jpeg",
+      "width": 1067,
+      "height": 1600,
+      "alt": "Side profile of a glowing white butterfly wing fixture next to the Spring in Bloom arch",
+      "source": "DSC00089.JPG (4.9 MB → 205 KB)",
+      "used_in": ["available"]
+    },
+    "gallery.spring-in-bloom.butterfly-wing-detail": {
+      "path": "assets/gallery/spring-in-bloom/butterfly-wing-detail.jpg",
+      "type": "image/jpeg",
+      "width": 1067,
+      "height": 1600,
+      "alt": "Close-up of the illuminated butterfly wing with floral arch in the background",
+      "source": "DSC00124.JPG (5.3 MB → 219 KB)",
+      "used_in": ["available"]
     },
     "press.tv-good-things-utah": {
       "path": "assets/press/tv-good-things-utah.jpg",
@@ -102,21 +197,139 @@
       "width": 1400,
       "height": 1050,
       "alt": "Miss Utah Decor team featured on the Good Things Utah TV set",
-      "usage": ["WeMakeIt → 'As seen on' badge thumbnail"]
+      "used_in": ["WeMakeIt → 'As seen on' badge thumbnail"]
+    },
+    "gallery.eid-mubarak-mosque-emerald": {
+      "path": "assets/gallery/eid-mubarak-mosque-emerald.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Eid Mubarak backdrop — white mosque silhouette with emerald, gold and mauve balloons, neon Eid Mubarak sign, lanterns and florals",
+      "source": "IMG_0575.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.eid-mubarak-crescent-minimalist": {
+      "path": "assets/gallery/eid-mubarak-crescent-minimalist.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Minimalist Eid Mubarak backdrop — gold panel with neon Eid Mubarak script, silver crescent moon, lanterns and Persian rug",
+      "source": "IMG_0727.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.first-bday-circus-tent": {
+      "path": "assets/gallery/first-bday-circus-tent.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "First birthday outdoor circus tent backdrop with red, blue and yellow balloons and Plim Plim characters",
+      "source": "IMG_5074.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.disney-princess-once-upon-a-time": {
+      "path": "assets/gallery/disney-princess-once-upon-a-time.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Disney Princess Once Upon a Time backdrop — pastel rainbow balloons, castle storybook panels and Belle, Cinderella and Jasmine cutouts",
+      "source": "IMG_5078.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.disney-princess-belle-cinderella": {
+      "path": "assets/gallery/disney-princess-belle-cinderella.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Two girls posing in Belle yellow gown and Cinderella blue gown in front of the Disney Princess birthday backdrop",
+      "source": "IMG_5095.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.wedding-burgundy-cream-florals": {
+      "path": "assets/gallery/wedding-burgundy-cream-florals.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Wedding ceremony setup — burgundy and cream florals flanking a white draped arch and tufted settee with pillar candles",
+      "source": "IMG_5282.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.engagement-she-said-yes-white": {
+      "path": "assets/gallery/engagement-she-said-yes-white.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "All-white engagement balloon arch with neon She Said Yes script and giant marquee diamond ring",
+      "source": "IMG_6072.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.first-bday-train-blue-white": {
+      "path": "assets/gallery/first-bday-train-blue-white.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "First birthday train backdrop — three white train cars with ONE blocks, white and blue balloon cloud and mountain views",
+      "source": "IMG_7181.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.marquee-name-anavay-lavender": {
+      "path": "assets/gallery/marquee-name-anavay-lavender.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Marquee letters spelling ANAVAY with lavender, white and gold balloon clusters at the base",
+      "source": "IMG_3707.HEIC",
+      "used_in": ["available — strong sample for custom-name marquee work"]
+    },
+    "gallery.marquee-corporate-40-years": {
+      "path": "assets/gallery/marquee-corporate-40-years.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Corporate 40th anniversary setup — lit marquee 4 0 with teal and green balloon bouquet and Children's Lab celebration banner",
+      "source": "IMG_5386.HEIC",
+      "used_in": ["available — only corporate event in the gallery so far"]
+    },
+    "gallery.outdoor-picnic-pastel-florals": {
+      "path": "assets/gallery/outdoor-picnic-pastel-florals.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Outdoor low picnic table on the lawn with pastel florals, taper candles, plates and floor pillows",
+      "source": "IMG_3253.HEIC (auto-rotated 90°)",
+      "used_in": ["available"]
+    },
+    "gallery.first-bday-mickey-mouse": {
+      "path": "assets/gallery/first-bday-mickey-mouse.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Mickey Mouse first birthday backdrop under a white tent with red, blue, black and yellow balloon arch and marquee 1",
+      "source": "IMG_3491.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.valentines-all-you-need-is-love": {
+      "path": "assets/gallery/valentines-all-you-need-is-love.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "Valentine's Day setup — red rose wall with All You Need Is Love neon, foil heart balloons and pink and red balloon arch",
+      "source": "IMG_9176.HEIC",
+      "used_in": ["available"]
+    },
+    "gallery.first-bday-mermaid-carriage": {
+      "path": "assets/gallery/first-bday-mermaid-carriage.jpg",
+      "type": "image/jpeg",
+      "width": 1200,
+      "height": 1600,
+      "alt": "First birthday mermaid carriage backdrop — pastel pink and lavender balloon arch, ONE marquee, princess carriage panel and Happy Birthday neon",
+      "source": "new-hero-image.HEIC",
+      "used_in": ["available — note: original filename suggested hero use; current hero stays celestial unless user confirms swap"]
     }
   },
-  "open_slots": [
-    {
-      "key": "florals",
-      "needed_for": "CategoryGrid Florals tile",
-      "current_fallback": "babyshower-oh-baby.jpg",
-      "ideal_shot": "tight crop of fresh/faux floral arrangement (no balloons dominating)"
-    },
-    {
-      "key": "grabgo",
-      "needed_for": "CategoryGrid Grab 'n Go tile",
-      "current_fallback": "gender-reveal-boy-or-girl.jpg",
-      "ideal_shot": "small at-home party kit / pre-built bouquet of balloons in a box"
-    }
-  ]
+  "open_slots": [],
+  "pending_conversion": {
+    "status": "complete",
+    "completed_on": "2026-04-28",
+    "note": "All 14 HEIC files were converted via the convert-heic.command script (macOS sips), then re-optimized through the standard convert pipeline. Originals and intermediate JPEGs were removed from _pending-conversion/."
+  }
 }

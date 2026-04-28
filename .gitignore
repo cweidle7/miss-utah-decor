@@ -8,3 +8,6 @@
 
 # Local-only design references (kept out of the deployed bundle)
 _design-reference/
+
+# Source files awaiting HEIC→JPG conversion on macOS (sips)
+_pending-conversion/

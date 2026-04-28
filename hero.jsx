@@ -6,7 +6,7 @@ const Hero = ({ onCTA }) => {
   return (
     <section style={{
       position: 'relative', height: '100vh', minHeight: isMobile ? 600 : 720,
-      overflow: 'hidden', background: '#0E0A1A',
+      overflow: 'hidden', background: '#150A1C',
       isolation: 'isolate',
     }}>
       {/* Ken Burns background — pure CSS, GPU-composited via will-change */}
@@ -16,7 +16,7 @@ const Hero = ({ onCTA }) => {
           position: 'absolute', inset: 0, zIndex: 0,
           backgroundImage: 'url(assets/hero/hero-poster.jpg)',
           backgroundSize: 'cover',
-          backgroundPosition: 'center top',
+          backgroundPosition: 'center 20%',
           animation: 'mud-hero-kb 14s ease-in-out infinite alternate',
           willChange: 'transform',
           transformOrigin: 'center center',
@@ -166,31 +166,6 @@ const Hero = ({ onCTA }) => {
                 </span>
               )}
             </a>
-          </div>
-
-          <div style={{
-            marginTop: isMobile ? 24 : 40,
-            display: 'flex', gap: 'clamp(20px, 4vw, 48px)', flexWrap: 'wrap',
-            animation: 'mud-hero-rise 800ms 840ms ease-out both',
-          }}>
-            {[
-              ['24h', 'Quote turnaround'],
-              ['7 days', 'Weekly availability'],
-              ['All Utah', 'Delivery & setup'],
-            ].map(([k, v]) => (
-              <div key={k}>
-                <div style={{
-                  fontFamily: 'var(--font-display)', fontWeight: 700,
-                  fontSize: isMobile ? 17 : 20, letterSpacing: '-0.01em',
-                  color: '#fff',
-                }}>{k}</div>
-                <div style={{
-                  fontFamily: 'var(--font-sans)', fontWeight: 400, fontSize: 9,
-                  letterSpacing: '.22em', textTransform: 'uppercase',
-                  color: 'rgba(255,255,255,.65)', marginTop: 4,
-                }}>{v}</div>
-              </div>
-            ))}
           </div>
 
         </div>

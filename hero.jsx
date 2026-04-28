@@ -1,24 +1,25 @@
 // Miss Utah Decor — Hero Carousel
 
 const SLIDES = [
-  // Spring in Bloom — landscape floral wall, center crop avoids the grass base
-  { src: 'assets/Hero_carousel/backdrop-angle.jpg',                   pos: 'center 42%' },
-  // It's a Boy — very light/cream, crop shows arch without the bright window
-  { src: 'assets/Hero_carousel/backdrop-sage-its-a-boy.jpg',          pos: 'center 32%' },
-  // Disney Princess — crop cuts the ceiling fan, keeps Belle + Cinderella
-  { src: 'assets/Hero_carousel/disney-princess-belle-cinderella.jpg', pos: 'center 42%' },
+  // Spring in Bloom — landscape floral wall, crop avoids the grass base
+  { src: 'assets/Hero_carousel/backdrop-angle.jpg',                  pos: 'center 42%' },
   // Eid Mubarak — portrait, mosque silhouette centered
-  { src: 'assets/Hero_carousel/eid-mubarak-mosque-emerald.jpg',       pos: 'center 36%' },
+  { src: 'assets/Hero_carousel/eid-mubarak-mosque-emerald.jpg',      pos: 'center 36%' },
   // Mermaid 1st bday — crop skips the table foreground, shows the backdrop
-  { src: 'assets/Hero_carousel/hero-poster.jpg',                      pos: 'center 22%' },
+  { src: 'assets/Hero_carousel/hero-poster.jpg',                     pos: 'center 22%' },
+  // Corporate 40 Years — crop cuts the ceiling, centers on marquee + balloons
+  { src: 'assets/Hero_carousel/marquee-corporate-40-years.jpg',      pos: 'center 55%' },
+  // Outdoor picnic — crop keeps the tablescape + florals, trims sky + cushions
+  { src: 'assets/Hero_carousel/outdoor-picnic-pastel-florals.jpg',   pos: 'center 38%' },
   // Valentine's — red rose wall + heart columns
-  { src: 'assets/Hero_carousel/valentines-all-you-need-is-love.jpg',  pos: 'center 38%' },
+  { src: 'assets/Hero_carousel/valentines-all-you-need-is-love.jpg', pos: 'center 38%' },
 ];
 
 const Hero = ({ onCTA }) => {
   const { isMobile } = useBreakpoint();
   const [activeIdx, setActiveIdx] = React.useState(0);
   const [paused, setPaused] = React.useState(false);
+  const [btnHover, setBtnHover] = React.useState(false);
   const dotRefs = React.useRef([]);
 
   // Preload all slides on mount so later frames don't flash in
@@ -81,7 +82,7 @@ const Hero = ({ onCTA }) => {
               backgroundSize: 'cover',
               backgroundPosition: slide.pos,
               opacity: i === activeIdx ? 1 : 0,
-              transition: 'opacity 900ms ease-in-out',
+              transition: 'opacity 650ms ease-in-out',
             }}
           />
         ))}
@@ -221,17 +222,13 @@ const Hero = ({ onCTA }) => {
                 padding: isMobile ? '14px 28px' : '18px 40px',
                 cursor: 'pointer',
                 display: 'inline-flex', alignItems: 'center', gap: 10,
-                transition: 'background 150ms ease-out, transform 200ms ease-out',
-                boxShadow: '0 8px 28px rgba(255,62,165,.38)',
+                background: btnHover ? '#e62e95' : '#FF3EA5',
+              transform: btnHover ? 'translateY(-2px)' : 'translateY(0)',
+              transition: 'background 150ms ease-out, transform 200ms ease-out',
+              boxShadow: '0 8px 28px rgba(255,62,165,.38)',
               }}
-              onMouseEnter={e => {
-                e.currentTarget.style.background = '#e62e95';
-                e.currentTarget.style.transform = 'translateY(-2px)';
-              }}
-              onMouseLeave={e => {
-                e.currentTarget.style.background = '#FF3EA5';
-                e.currentTarget.style.transform = 'translateY(0)';
-              }}
+              onMouseEnter={() => setBtnHover(true)}
+              onMouseLeave={() => setBtnHover(false)}
             >
               Let's Party
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

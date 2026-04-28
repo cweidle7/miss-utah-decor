@@ -310,6 +310,14 @@ const Hero = ({ onCTA }) => {
           0%,100% { transform: scaleY(1); opacity: .28; }
           50%     { transform: scaleY(1.4); opacity: .75; }
         }
+        @keyframes mud-marquee {
+          from { transform: translateX(0); }
+          to   { transform: translateX(-50%); }
+        }
+        @keyframes mud-float {
+          0%   { transform: translate(0,0) rotate(-3deg); }
+          100% { transform: translate(8px,-14px) rotate(3deg); }
+        }
       `}</style>
     </section>
   );

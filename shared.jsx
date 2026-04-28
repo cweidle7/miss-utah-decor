@@ -306,7 +306,7 @@ const Footer = () => {
         fontSize: 12, color: '#F3D9E1', opacity: .7,
       }}>
         <div>© 2026 Miss Utah Decor · Made with love in Utah</div>
-        <div>Serving all of Utah — SLC · Provo · Park City · Ogden</div>
+        <div>Serving all of Utah: SLC · Provo · Park City · Ogden</div>
       </div>
     </footer>
   );

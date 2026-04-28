@@ -8,8 +8,8 @@ const IMG = {
   florals:     'assets/gallery/bouquet-roses-handheld.jpg',
   milestone:   'assets/gallery/milestone-50-pastel.jpg',
   grabgo:      'assets/gallery/balloon-bouquet-welcome-home.jpg',
-  featureMake: 'assets/gallery/backdrop-sage-its-a-boy.jpg',
-  tvApp:       'assets/press/tv-good-things-utah.jpg',
+  featureMake: 'assets/Good%20Things%20Utah%20/tv-good-things-utah.jpg',
+  tvApp:       'assets/Good%20Things%20Utah%20/Good%20Things%20Utah%20Logo.png',
   ig1:         'assets/gallery/babyshower-oh-baby.jpg',
   ig2:         'assets/gallery/gender-reveal-boy-or-girl.jpg',
   ig3:         'assets/gallery/milestone-50-pastel.jpg',
@@ -24,8 +24,8 @@ const ALT = {
   florals:     'Hand-tied red rose bouquet wrapped in cream paper',
   milestone:   'Pastel pink and lavender 50th birthday balloon arch with marquee numbers',
   grabgo:      'Silver and gold Welcome Home balloon bouquet for a military homecoming',
-  featureMake: 'Mother-daughter studio at work — sage balloon backdrop in progress',
-  tvApp:       'Miss Utah Decor team featured on the Good Things Utah TV set',
+  featureMake: 'Miss Utah Decor mother-daughter team on the Good Things Utah TV set',
+  tvApp:       'Good Things Utah show logo',
   ig1:         'Oh Baby! welcome sign and balloon backdrop for a baby shower',
   ig2:         'Boy or Girl gender reveal balloon arch with bulldog',
   ig3:         'Pastel surprise 50th party balloon arch with lit numbers',
@@ -69,29 +69,30 @@ const PinkBand = () => {
   const row = [...occasions, ...occasions];
   return (
     <section style={{ background: 'var(--pink-500)', padding: '56px 0 48px', position: 'relative', overflow: 'hidden' }}>
+      <style>{`@keyframes mud-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }`}</style>
       <div aria-hidden="true" style={{ position:'absolute', inset:0, background:'radial-gradient(60% 80% at 50% 0%, rgba(255,255,255,.18), transparent 60%)' }} />
       <div style={{ position:'relative', maxWidth: 1080, margin: '0 auto', padding: '0 clamp(20px,4vw,56px)' }}>
         <div style={{ textAlign:'center' }}>
-          <div style={{ fontFamily:'var(--font-sans)', fontWeight: 600, fontSize: 11, letterSpacing:'.3em', textTransform:'uppercase', color:'var(--pink-100)', marginBottom: 14 }}>— The studio in one line —</div>
+          <div style={{ fontFamily:'var(--font-sans)', fontWeight: 600, fontSize: 11, letterSpacing:'.3em', textTransform:'uppercase', color:'var(--pink-100)', marginBottom: 14 }}>The studio in one line</div>
           <p style={{
             fontFamily: 'var(--font-display)', fontStyle: 'italic', fontWeight: 500,
-            fontSize: 'clamp(18px, 2.2vw, 32px)', lineHeight: 1.35,
+            fontSize: 'clamp(15px, 1.8vw, 26px)', lineHeight: 1.35,
             color: '#fff', margin: 0, textWrap: 'pretty',
           }}>
-            Over a decade turning empty rooms into <span style={{ fontFamily:'var(--font-script)', fontStyle:'normal', fontWeight:400, fontSize:'1.4em', color:'var(--cream)' }}>pure magic</span> — from small arches to full-venue installations, we bring every creative vision to life.
+            Over a decade turning empty rooms into <span style={{ fontFamily:'var(--font-script)', fontStyle:'normal', fontWeight:400, fontSize:'1.3em', color:'var(--cream)' }}>pure magic.</span> From small arches to full-venue installations, we bring every creative vision to life.
           </p>
         </div>
       </div>
       <div style={{ marginTop: 40, overflow: 'hidden', borderTop: '1px solid rgba(255,255,255,.2)', borderBottom: '1px solid rgba(255,255,255,.2)', padding: '16px 0' }}>
-        <div style={{ display:'flex', gap: 40, whiteSpace:'nowrap', animation:'mud-marquee 42s linear infinite' }}>
+        <div style={{ display:'flex', flexWrap:'nowrap', width:'max-content', gap: 40, animation:'mud-marquee 42s linear infinite' }}>
           {row.map((o, i) => (
             <span key={i} style={{
               fontFamily:'var(--font-display)', fontWeight: 700, fontStyle:'italic',
-              fontSize: 'clamp(18px, 2.2vw, 30px)',
-              color:'#fff', display:'inline-flex', alignItems:'center', gap: 40,
+              fontSize: 'clamp(14px, 1.6vw, 22px)',
+              color:'#fff', display:'inline-flex', alignItems:'center', gap: 40, flexShrink: 0,
             }}>
               {o}
-              <span style={{ color:'var(--pink-200)', fontSize: 18, fontStyle:'normal' }}>✦</span>
+              <span style={{ color:'var(--pink-200)', fontSize: 16, fontStyle:'normal' }}>✦</span>
             </span>
           ))}
         </div>
@@ -100,35 +101,73 @@ const PinkBand = () => {
   );
 };
 
-const CategoryTile = ({ src, alt, label, copy, onClick, tall = false, isMobile = false }) => {
+const CategoryTile = ({ images = [], alts = [], label, copy, onClick, tall = false, isMobile = false, startDelay = 0 }) => {
   const [hover, setHover] = React.useState(false);
+  const [activeIdx, setActiveIdx] = React.useState(0);
+  const intervalRef = React.useRef(null);
+
+  // Initial rotation start, staggered by startDelay so cards don't all switch at once
+  React.useEffect(() => {
+    if (images.length <= 1) return;
+    const t = setTimeout(() => {
+      intervalRef.current = setInterval(() => {
+        setActiveIdx(i => (i + 1) % images.length);
+      }, 6000);
+    }, startDelay);
+    return () => { clearTimeout(t); clearInterval(intervalRef.current); };
+  }, [images.length, startDelay]);
+
+  // Pause on hover, resume immediately on leave
+  React.useEffect(() => {
+    if (images.length <= 1) return;
+    if (hover) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    } else if (!intervalRef.current) {
+      intervalRef.current = setInterval(() => {
+        setActiveIdx(i => (i + 1) % images.length);
+      }, 6000);
+    }
+  }, [hover, images.length]);
+
   return (
     <a href="#" onClick={(e)=>{e.preventDefault(); onClick?.()}}
        onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}
-       aria-label={`${label} — ${copy}`}
+       aria-label={`${label}: ${copy}`}
        style={{
          textDecoration:'none', color:'inherit', display:'flex', flexDirection:'column', gap: 18,
          cursor:'pointer',
          gridRow: (!isMobile && tall) ? 'span 2' : 'auto',
        }}>
-      <div role="img" aria-label={alt} style={{
+      <div style={{
         position:'relative',
         width:'100%',
         aspectRatio: (!isMobile && tall) ? '0.85 / 1.3' : '1 / 1.05',
-        backgroundImage:`url(${src})`, backgroundSize:'cover', backgroundPosition:'center',
         borderRadius: 18, boxShadow: hover ? 'var(--shadow-lg)' : 'var(--shadow-md)',
         transform: hover ? 'translateY(-6px)' : 'translateY(0)',
         transition:'all 400ms cubic-bezier(.22,.61,.36,1)',
         overflow:'hidden',
       }}>
+        {images.map((src, i) => (
+          <img key={i} src={src} alt={i === 0 ? (alts[0] || '') : ''} aria-hidden={i !== 0 || undefined}
+            style={{
+              position:'absolute', inset:0, width:'100%', height:'100%',
+              objectFit:'cover', objectPosition:'center',
+              opacity: i === activeIdx ? 1 : 0,
+              transition:'opacity 0.8s ease-in-out',
+              willChange:'opacity',
+            }}
+          />
+        ))}
         <div aria-hidden="true" style={{
           position:'absolute', inset:0,
           background:'linear-gradient(to top, rgba(14,10,12,.55) 0%, rgba(14,10,12,0) 50%)',
+          zIndex: 1,
         }} />
         <div style={{
           position:'absolute', left: 20, bottom: 20, right: 20,
           display:'flex', alignItems:'flex-end', justifyContent:'space-between', gap: 12,
-          color:'#fff',
+          color:'#fff', zIndex: 2,
         }}>
           <div>
             <div style={{ fontFamily:'var(--font-display)', fontWeight:800, fontSize: (!isMobile && tall) ? 36 : 24, textTransform:'uppercase', letterSpacing:'.01em', lineHeight: 1 }}>{label}</div>
@@ -144,6 +183,27 @@ const CategoryTile = ({ src, alt, label, copy, onClick, tall = false, isMobile =
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </span>
         </div>
+        {images.length > 1 && (
+          <div aria-hidden="true" style={{
+            position:'absolute', bottom: 8, left:0, right:0,
+            display:'flex', justifyContent:'center', alignItems:'center', gap: 5,
+            zIndex: 3, pointerEvents:'none',
+          }}>
+            {images.map((_, i) => (
+              <button key={i} onClick={(e)=>{ e.preventDefault(); e.stopPropagation(); setActiveIdx(i); }}
+                aria-label={`Show image ${i + 1} of ${images.length}`}
+                style={{
+                  width: i === activeIdx ? 8 : 6, height: i === activeIdx ? 8 : 6,
+                  borderRadius:'50%',
+                  background: i === activeIdx ? '#fff' : 'rgba(255,255,255,.4)',
+                  border:'none', padding:0, cursor:'pointer',
+                  transition:'all 0.25s ease', flexShrink:0,
+                  pointerEvents:'auto', outline:'none',
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </a>
   );
@@ -155,13 +215,34 @@ const CategoryGrid = ({ onPick }) => {
   return (
     <section id="offer" style={{ padding: 'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background: '#fff' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <SectionIntro eyebrow="What We Make" title="Decor for every" scriptWord="celebration" subtitle="Pick a canvas — we'll build the rest around your colors, venue, and vibe." />
+        <SectionIntro eyebrow="What We Make" title="Decor for every" scriptWord="celebration" subtitle="Pick a canvas. We'll build the rest around your colors, venue, and vibe." />
         <div style={{ display:'grid', gridTemplateColumns: cols, gridTemplateRows:'auto', gap: isMobile ? 20 : 28 }}>
-          <CategoryTile tall={!isMobile} isMobile={isMobile} src={IMG.archTall}   alt={ALT.archTall}   label="Balloon Arches"    copy="Floor-standing, ceiling, full rooms. Our signature."    onClick={()=>onPick?.('balloons')} />
-          <CategoryTile               isMobile={isMobile} src={IMG.backdrops}  alt={ALT.backdrops}  label="Backdrops"          copy="Welcome signs, photo walls, marquee letters."           onClick={()=>onPick?.('backdrops')} />
-          <CategoryTile               isMobile={isMobile} src={IMG.florals}    alt={ALT.florals}    label="Florals"            copy="Fresh & faux arrangements to match any palette."        onClick={()=>onPick?.('florals')} />
-          <CategoryTile               isMobile={isMobile} src={IMG.milestone}  alt={ALT.milestone}  label="Milestone Numbers"  copy="Marquee 30s, 40s, 50s — lit up & photo-ready."         onClick={()=>onPick?.('milestone')} />
-          <CategoryTile               isMobile={isMobile} src={IMG.grabgo}     alt={ALT.grabgo}     label="Grab 'n Go"         copy="Pre-built kits for smaller at-home celebrations."       onClick={()=>onPick?.('grabgo')} />
+          {/* Balloon Garlands — balloon-arch-pink-silver.jpg, first-bday-circus-tent.jpg, first-bday-train-blue-white.jpg */}
+          <CategoryTile tall={!isMobile} isMobile={isMobile} startDelay={0}
+            images={['assets/gallery/balloon-arch-pink-silver.jpg','assets/gallery/first-bday-circus-tent.jpg','assets/gallery/first-bday-train-blue-white.jpg']}
+            alts={['Pink and silver balloon garland with neon Happy Birthday sign and disco wall']}
+            label="Balloon Garlands" copy="Floor-standing, ceiling, full rooms. Our signature." onClick={()=>onPick?.('balloons')} />
+          {/* Backdrops — backdrop-sage-its-a-boy.jpg, spring-in-bloom/backdrop-front.jpg, spring-in-bloom/backdrop-wide.jpg */}
+          <CategoryTile isMobile={isMobile} startDelay={1500}
+            images={['assets/gallery/backdrop-sage-its-a-boy.jpg','assets/gallery/spring-in-bloom/backdrop-front.jpg','assets/gallery/spring-in-bloom/backdrop-wide.jpg']}
+            alts={["Sage green and cream balloon backdrop with an It's a Boy cart"]}
+            label="Backdrops" copy="Welcome signs, photo walls, marquee letters." onClick={()=>onPick?.('backdrops')} />
+          {/* Florals — bouquet-roses-handheld.jpg, wedding-burgundy-cream-florals.jpg */}
+          <CategoryTile isMobile={isMobile} startDelay={3000}
+            images={['assets/gallery/bouquet-roses-handheld.jpg','assets/gallery/wedding-burgundy-cream-florals.jpg']}
+            alts={['Hand-tied red rose bouquet wrapped in cream paper']}
+            label="Florals" copy="Fresh & faux arrangements to match any palette." onClick={()=>onPick?.('florals')} />
+          {/* Milestone Numbers — milestone-50-pastel.jpg, marquee-8th-birthday-pink-purple.jpg, marquee-name-anavay-lavender.jpg */}
+          <CategoryTile isMobile={isMobile} startDelay={4500}
+            images={['assets/gallery/milestone-50-pastel.jpg','assets/gallery/marquee-8th-birthday-pink-purple.jpg','assets/gallery/marquee-name-anavay-lavender.jpg']}
+            alts={['Pastel pink and lavender 50th birthday balloon arch with marquee numbers']}
+            label="Milestone Numbers" copy="Marquee 30s, 40s, 50s. Lit up and photo-ready." onClick={()=>onPick?.('milestone')} />
+          {/* Grab 'n Go — balloon-bouquet-welcome-home.jpg (used twice) */}
+          {/* TODO: add a second distinct grab-n-go image when available */}
+          <CategoryTile isMobile={isMobile} startDelay={6000}
+            images={['assets/gallery/balloon-bouquet-welcome-home.jpg','assets/gallery/balloon-bouquet-welcome-home.jpg']}
+            alts={['Silver and gold Welcome Home balloon bouquet for a military homecoming']}
+            label="Grab 'n Go" copy="Pre-built kits for smaller at-home celebrations." onClick={()=>onPick?.('grabgo')} />
         </div>
       </div>
     </section>
@@ -238,7 +319,7 @@ const Packages = ({ onCTA }) => {
   return (
     <section id="packages" style={{ padding: 'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background: 'var(--bg-2)' }}>
       <div style={{ maxWidth: 1280, margin: '0 auto' }}>
-        <SectionIntro eyebrow="Party packages" title="Everything you need," scriptWord="nothing you don't." subtitle="Transparent pricing to start the conversation — every package is fully customized to your colors, theme, and venue." />
+        <SectionIntro eyebrow="Party packages" title="Everything you need," scriptWord="nothing you don't." subtitle="Transparent pricing to start the conversation. Every package is fully customized to your colors, theme, and venue." />
         <div style={{
           display:'grid',
           gridTemplateColumns: isMobile || isTablet ? '1fr' : 'repeat(3, 1fr)',
@@ -356,20 +437,19 @@ const WeMakeIt = ({ onCTA }) => {
             backgroundImage:`url(${IMG.featureMake})`, backgroundSize:'cover', backgroundPosition:'center',
             borderRadius: 24, boxShadow:'var(--shadow-lg)',
           }} />
-          {/* "As seen on" badge — repositioned on mobile to avoid overflow */}
+          {/* "As seen on" badge — inside photo frame bottom-left on desktop, inline on mobile */}
           <div style={{
             position: stacked ? 'relative' : 'absolute',
-            bottom: stacked ? 'auto' : -24,
-            right: stacked ? 'auto' : -24,
+            bottom: stacked ? 'auto' : 24,
+            left: stacked ? 'auto' : 24,
             marginTop: stacked ? 16 : 0,
-            marginLeft: stacked ? 'auto' : 0,
             background:'#fff', borderRadius: 18, padding: '18px 24px',
             boxShadow:'var(--shadow-lg)', display:'flex', alignItems:'center', gap: 16,
             maxWidth: 260,
           }}>
             <div role="img" aria-label={ALT.tvApp} style={{
-              width: 52, height: 52, borderRadius: 12, flexShrink: 0,
-              backgroundImage:`url(${IMG.tvApp})`, backgroundSize:'cover', backgroundPosition:'center',
+              width: 72, height: 52, borderRadius: 10, flexShrink: 0,
+              backgroundImage:`url(${IMG.tvApp})`, backgroundSize:'contain', backgroundPosition:'center', backgroundRepeat:'no-repeat',
             }} />
             <div>
               <div style={{ fontFamily:'var(--font-sans)', fontWeight:700, fontSize: 11, letterSpacing:'.18em', textTransform:'uppercase', color:'var(--pink-500)' }}>As seen on</div>
@@ -384,7 +464,7 @@ const WeMakeIt = ({ onCTA }) => {
             A mother-daughter studio, obsessed with the moment you walk in.
           </h3>
           <p style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 18, lineHeight: 1.65, color:'var(--fg-1)', maxWidth: 520, margin:'0 0 18px' }}>
-            We started in 2014 in our garage and grew into Utah's go-to balloon decor studio. Every event gets our full attention — the palette, the flow, the small flourishes no one else would notice.
+            We started in 2014 in our garage and grew into Utah's go-to balloon decor studio. Every event gets our full attention: the palette, the flow, the small flourishes no one else would notice.
           </p>
           <p style={{ fontSize: 15, lineHeight: 1.7, color:'var(--fg-2)', maxWidth: 520, margin:'0 0 32px' }}>
             From backyard baby showers to on-camera segments for Good Things Utah, we treat every event like it's our own.
@@ -402,10 +482,10 @@ const WeMakeIt = ({ onCTA }) => {
 const InstagramGrid = () => {
   const { isMobile, isTablet } = useBreakpoint();
   const posts = [
-    { src: IMG.ig1, alt: ALT.ig1, caption: 'Adding a backdrop is a good idea as welcome sign to your event — just look how stunning this Mami is', tags: '#babyshower #welcomesign' },
+    { src: IMG.ig1, alt: ALT.ig1, caption: 'Adding a backdrop is a good idea as welcome sign to your event. Just look how stunning this Mami is', tags: '#babyshower #welcomesign' },
     { src: IMG.ig2, alt: ALT.ig2, caption: 'Gender Reveal party, but a good boy stole the show at the reveal with his bows', tags: '#genderreveal' },
     { src: IMG.ig3, alt: ALT.ig3, caption: 'How delicate are these colors for a surprise 50 party', tags: '#50party #50balloons' },
-    { src: IMG.ig4, alt: ALT.ig4, caption: 'Pastel dreams and marquee numbers — this 50th had us in our feelings', tags: '#milestone #50' },
+    { src: IMG.ig4, alt: ALT.ig4, caption: 'Pastel dreams and marquee numbers. This 50th had us in our feelings', tags: '#milestone #50' },
   ];
   return (
     <section style={{ padding: 'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background: '#fff' }}>
@@ -500,11 +580,11 @@ const ContactBlock = ({ onSubmit }) => {
             Let's make your<br />event <span style={{ fontFamily:'var(--font-script)', fontWeight:400, fontSize:'1.15em', textTransform:'none', letterSpacing: 0, color:'var(--pink-500)' }}>unforgettable.</span>
           </h2>
           <p style={{ fontSize: 17, lineHeight: 1.65, color:'var(--fg-2)', marginTop: 24, maxWidth: 440 }}>
-            Tell us about your event — date, venue, colors, whatever you have — and we'll put together a custom quote within 24 hours.
+            Tell us about your event: date, venue, colors, whatever you have. We'll put together a custom quote within 24 hours.
           </p>
           <div style={{ marginTop: 32, display:'flex', flexDirection:'column', gap: 14 }}>
             {[
-              ['📞', '(385) 439-5050', 'Call or text — we answer fast', 'tel:+13854395050'],
+              ['📞', '(385) 439-5050', 'Call or text, we answer fast', 'tel:+13854395050'],
               ['✉️', 'Missutahdecor@gmail.com', 'Replies within 24h', 'mailto:Missutahdecor@gmail.com'],
               ['📍', 'Serving all of Utah', 'SLC · Provo · Park City · Ogden', null],
             ].map(([icon, bold, sub, href]) => (
@@ -542,7 +622,7 @@ const ContactBlock = ({ onSubmit }) => {
               setSent(true);
               onSubmit?.(form);
             } catch (err) {
-              setError('Something went wrong — please try again or email us directly.');
+              setError('Something went wrong. Please try again or email us directly.');
             } finally {
               setSending(false);
             }
@@ -561,7 +641,7 @@ const ContactBlock = ({ onSubmit }) => {
             <div style={{ gridColumn:'1 / -1', textAlign:'center', padding:'56px 0', color:'#fff', position:'relative' }}>
               <div style={{ fontFamily:'var(--font-script)', fontSize: isMobile ? 64 : 96, lineHeight: .9, color:'#fff' }}>Thank you!</div>
               <p style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 20, marginTop: 12 }}>We'll be in touch within 24 hours</p>
-              <div style={{ marginTop: 24, fontFamily:'var(--font-sans)', fontSize: 12, letterSpacing:'.18em', textTransform:'uppercase' }}>— Miss Utah Decor</div>
+              <div style={{ marginTop: 24, fontFamily:'var(--font-sans)', fontSize: 12, letterSpacing:'.18em', textTransform:'uppercase' }}>Miss Utah Decor</div>
             </div>
           ) : (<>
             <div style={{ gridColumn:'1 / -1', position:'relative' }}>

@@ -1,34 +1,69 @@
-// Miss Utah Decor — Hero (carousel)
+// Miss Utah Decor — Hero Carousel
 
 const SLIDES = [
-  { src: 'assets/gallery/balloon-arch-pink-silver.jpg',          pos: 'center 40%' },
-  { src: 'assets/gallery/milestone-50-pastel.jpg',               pos: 'center 48%' },
-  { src: 'assets/gallery/babyshower-oh-baby.jpg',                pos: 'center 25%' },
-  { src: 'assets/gallery/spring-in-bloom/backdrop-front.jpg',    pos: 'center 42%' },
+  // Spring in Bloom — landscape floral wall, center crop avoids the grass base
+  { src: 'assets/Hero_carousel/backdrop-angle.jpg',                   pos: 'center 42%' },
+  // It's a Boy — very light/cream, crop shows arch without the bright window
+  { src: 'assets/Hero_carousel/backdrop-sage-its-a-boy.jpg',          pos: 'center 32%' },
+  // Disney Princess — crop cuts the ceiling fan, keeps Belle + Cinderella
+  { src: 'assets/Hero_carousel/disney-princess-belle-cinderella.jpg', pos: 'center 42%' },
+  // Eid Mubarak — portrait, mosque silhouette centered
+  { src: 'assets/Hero_carousel/eid-mubarak-mosque-emerald.jpg',       pos: 'center 36%' },
+  // Mermaid 1st bday — crop skips the table foreground, shows the backdrop
+  { src: 'assets/Hero_carousel/hero-poster.jpg',                      pos: 'center 22%' },
+  // Valentine's — red rose wall + heart columns
+  { src: 'assets/Hero_carousel/valentines-all-you-need-is-love.jpg',  pos: 'center 38%' },
 ];
 
 const Hero = ({ onCTA }) => {
   const { isMobile } = useBreakpoint();
   const [activeIdx, setActiveIdx] = React.useState(0);
+  const [paused, setPaused] = React.useState(false);
+  const dotRefs = React.useRef([]);
 
-  // Preload all slides on mount so later frames don't flash
+  // Preload all slides on mount so later frames don't flash in
   React.useEffect(() => {
     SLIDES.forEach(({ src }) => { const img = new Image(); img.src = src; });
   }, []);
 
-  // Advance every 4.2 s
+  // Auto-advance every 5s; pauses when hovered
   React.useEffect(() => {
-    const id = setInterval(() => setActiveIdx(i => (i + 1) % SLIDES.length), 4200);
+    if (paused) return;
+    const id = setInterval(() => setActiveIdx(i => (i + 1) % SLIDES.length), 5000);
     return () => clearInterval(id);
-  }, []);
+  }, [paused]);
+
+  const goTo = React.useCallback(i => setActiveIdx(i), []);
+
+  // Roving tabindex keyboard nav on dots
+  const handleDotKeyDown = (e, i) => {
+    let next = i;
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      e.preventDefault(); next = (i + 1) % SLIDES.length;
+    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault(); next = (i - 1 + SLIDES.length) % SLIDES.length;
+    } else { return; }
+    goTo(next);
+    dotRefs.current[next]?.focus();
+  };
 
   return (
-    <section style={{
-      position: 'relative', height: '100vh', minHeight: isMobile ? 600 : 720,
-      overflow: 'hidden', background: '#150A1C',
-      isolation: 'isolate',
-    }}>
-      {/* Ken Burns wrapper — single continuous zoom across all slides */}
+    <section
+      role="region"
+      aria-label="Miss Utah Decor event highlights — hero carousel"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      style={{
+        position: 'relative',
+        height: '100vh',
+        minHeight: isMobile ? 600 : 720,
+        overflow: 'hidden',
+        background: '#150A1C',
+        isolation: 'isolate',
+      }}
+    >
+
+      {/* ── Slides inside a shared Ken Burns wrapper ─────────────────────── */}
       <div
         aria-hidden="true"
         style={{
@@ -52,170 +87,189 @@ const Hero = ({ onCTA }) => {
         ))}
       </div>
 
-      {/* Bottom gradient — shields text */}
-      <div aria-hidden="true" style={{
-        position: 'absolute', inset: 0, zIndex: 1,
-        background: 'linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 36%, transparent 60%)',
-      }} />
+      {/* ── Persistent overlay — bottom-left anchor, protects text on every slide */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute', inset: 0, zIndex: 1,
+          background: 'linear-gradient(to top right, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.15) 50%, transparent 100%)',
+        }}
+      />
 
-      {/* Side label */}
+      {/* ── Side label (desktop only) ──────────────────────────────────────── */}
       {!isMobile && (
-        <div aria-hidden="true" style={{
-          position: 'absolute', left: 'clamp(20px, 3vw, 40px)', top: '52%', transform: 'translateY(-50%)',
-          zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
-          color: 'rgba(255,255,255,.45)',
-        }}>
-          <span style={{ width: 1, height: 52, background: 'rgba(255,255,255,.22)' }} />
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            left: 'clamp(20px, 3vw, 40px)', top: '52%', transform: 'translateY(-50%)',
+            zIndex: 2,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
+            color: 'rgba(255,255,255,.42)',
+          }}
+        >
+          <span style={{ width: 1, height: 52, background: 'rgba(255,255,255,.20)' }} />
           <span style={{
             fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 9,
             letterSpacing: '.4em', textTransform: 'uppercase',
             writingMode: 'vertical-rl', transform: 'rotate(180deg)',
-          }}>Salt Lake City · Utah</span>
-          <span style={{ width: 1, height: 52, background: 'rgba(255,255,255,.22)' }} />
+          }}>
+            Salt Lake City · Utah
+          </span>
+          <span style={{ width: 1, height: 52, background: 'rgba(255,255,255,.20)' }} />
         </div>
       )}
 
-      {/* Instagram side link */}
+      {/* ── Instagram side link (desktop only) ───────────────────────────── */}
       {!isMobile && (
         <a
           href="https://instagram.com/missutahdecor"
           target="_blank"
           rel="noreferrer"
           style={{
-            position: 'absolute', right: 'clamp(20px, 3vw, 40px)', top: '50%', transform: 'translateY(-50%)',
-            zIndex: 2, display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
-            color: 'rgba(255,255,255,.45)', textDecoration: 'none',
+            position: 'absolute',
+            right: 'clamp(20px, 3vw, 40px)', top: '50%', transform: 'translateY(-50%)',
+            zIndex: 2,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 14,
+            color: 'rgba(255,255,255,.42)', textDecoration: 'none',
           }}
         >
-          <span style={{ width: 1, height: 44, background: 'rgba(255,255,255,.22)' }} />
+          <span style={{ width: 1, height: 44, background: 'rgba(255,255,255,.20)' }} />
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.4">
-            <rect x="3" y="3" width="18" height="18" rx="5"/>
-            <circle cx="12" cy="12" r="4"/>
-            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+            <rect x="3" y="3" width="18" height="18" rx="5" />
+            <circle cx="12" cy="12" r="4" />
+            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
           </svg>
           <span style={{
             fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 9,
             letterSpacing: '.4em', textTransform: 'uppercase',
             writingMode: 'vertical-rl',
-          }}>@missutahdecor</span>
-          <span style={{ width: 1, height: 44, background: 'rgba(255,255,255,.22)' }} />
+          }}>
+            @missutahdecor
+          </span>
+          <span style={{ width: 1, height: 44, background: 'rgba(255,255,255,.20)' }} />
         </a>
       )}
 
-      {/* Main content — bottom-left anchored */}
+      {/* ── Main content — bottom-left ────────────────────────────────────── */}
       <div style={{
         position: 'absolute', inset: 0, zIndex: 3,
         display: 'flex', alignItems: 'flex-end',
         padding: `0 clamp(32px, 4vw, 64px) clamp(32px, 4vw, 64px)`,
       }}>
-        <div style={{ maxWidth: isMobile ? '92%' : 620 }}>
+        <div style={{ maxWidth: isMobile ? '92%' : 660 }}>
 
+          {/* Eyebrow */}
           <div style={{
-            display: 'flex', alignItems: 'center', gap: 14, marginBottom: 20,
+            display: 'flex', alignItems: 'center', gap: 14,
+            marginBottom: isMobile ? 16 : 22,
             animation: 'mud-hero-rise 600ms 100ms ease-out both',
           }}>
-            <span style={{ width: 24, height: 1, background: 'rgba(255,255,255,.38)', flexShrink: 0 }} />
             <span style={{
-              fontFamily: 'var(--font-sans)', fontWeight: 500,
-              fontSize: 10, letterSpacing: '.36em', textTransform: 'uppercase',
-              color: 'rgba(255,255,255,.78)',
-            }}>Utah's Premier Balloon &amp; Event Decor</span>
+              width: 24, height: 1,
+              background: 'rgba(255,255,255,.40)',
+              flexShrink: 0,
+            }} />
+            <span style={{
+              fontFamily: 'var(--font-sans)', fontWeight: 600,
+              fontSize: 10, letterSpacing: '.38em', textTransform: 'uppercase',
+              color: 'rgba(255,255,255,.85)',
+            }}>
+              Utah's Premier Balloon &amp; Event Decor
+            </span>
           </div>
 
+          {/* H1 */}
           <h1 style={{
-            fontFamily: 'var(--font-display)', fontWeight: 700,
-            fontSize: isMobile ? 'clamp(36px, 10vw, 52px)' : 'clamp(52px, 6.5vw, 96px)',
-            lineHeight: 1.0,
-            letterSpacing: '-0.025em',
-            color: '#fff', margin: 0,
-            animation: 'mud-hero-rise 800ms 220ms ease-out both',
+            fontFamily: 'var(--font-display)', fontWeight: 800,
+            fontSize: isMobile ? 'clamp(36px, 10vw, 54px)' : 'clamp(56px, 7vw, 104px)',
+            lineHeight: 0.95,
+            letterSpacing: '-0.02em',
+            textTransform: 'uppercase',
+            margin: 0,
+            animation: 'mud-hero-rise 800ms 200ms ease-out both',
           }}>
-            <span style={{ display: 'block', overflow: 'hidden' }}>
-              <span style={{ display: 'inline-block', animation: 'mud-hero-rise 800ms 280ms ease-out both' }}>
-                Your Party,
-              </span>
-            </span>
-            <span style={{ display: 'block', overflow: 'hidden' }}>
-              <span style={{
-                display: 'inline-block', animation: 'mud-hero-rise 800ms 380ms ease-out both',
-                color: 'var(--pink-300)',
-              }}>
-                Unforgettable.
-              </span>
-            </span>
+            <span style={{ display: 'block', color: '#ffffff' }}>Your Party,</span>
+            <span style={{ display: 'block', color: '#FF3EA5' }}>Unforgettable</span>
           </h1>
 
-          <div style={{
-            marginTop: 18,
+          {/* Subheadline */}
+          <p style={{
             fontFamily: 'var(--font-script)',
-            fontSize: isMobile ? 'clamp(18px, 4vw, 23px)' : 'clamp(20px, 2vw, 28px)',
-            lineHeight: 1.25,
-            color: 'rgba(255,255,255,.75)',
-            animation: 'mud-hero-rise 800ms 520ms ease-out both',
+            fontSize: isMobile ? 'clamp(18px, 4vw, 22px)' : 'clamp(20px, 2vw, 28px)',
+            lineHeight: 1.3,
+            color: 'rgba(255,255,255,.88)',
+            margin: `${isMobile ? 14 : 18}px 0 0`,
+            animation: 'mud-hero-rise 800ms 460ms ease-out both',
           }}>
-            we don't just make balloons — we make memories.
-          </div>
+            we don't just make balloons. We make memories.
+          </p>
 
+          {/* CTA */}
           <div style={{
             marginTop: isMobile ? 24 : 36,
-            display: 'flex', gap: 16, alignItems: 'center', flexWrap: 'wrap',
-            animation: 'mud-hero-rise 800ms 680ms ease-out both',
+            animation: 'mud-hero-rise 800ms 620ms ease-out both',
           }}>
-            <Button variant="primary" size={isMobile ? 'md' : 'xl'} onClick={onCTA}>
-              Let's Party
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M5 12h14M13 5l7 7-7 7"/>
-              </svg>
-            </Button>
-            <a
-              href="tel:+13854395050"
+            <button
+              onClick={onCTA}
               style={{
-                fontFamily: 'var(--font-sans)', fontWeight: 500, fontSize: 11,
-                letterSpacing: '.14em', textTransform: 'uppercase',
-                color: 'rgba(255,255,255,.82)', textDecoration: 'none',
+                fontFamily: 'var(--font-sans)', fontWeight: 700,
+                fontSize: isMobile ? 12 : 13,
+                letterSpacing: '.18em', textTransform: 'uppercase',
+                color: '#fff', background: '#FF3EA5',
+                border: 'none', borderRadius: 999,
+                padding: isMobile ? '14px 28px' : '18px 40px',
+                cursor: 'pointer',
                 display: 'inline-flex', alignItems: 'center', gap: 10,
-                padding: '18px 4px',
+                transition: 'background 150ms ease-out, transform 200ms ease-out',
+                boxShadow: '0 8px 28px rgba(255,62,165,.38)',
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.background = '#e62e95';
+                e.currentTarget.style.transform = 'translateY(-2px)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.background = '#FF3EA5';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
-              <span style={{
-                width: 36, height: 36, borderRadius: 999, display: 'grid', placeItems: 'center',
-                border: '1px solid rgba(255,255,255,.35)',
-                flexShrink: 0,
-              }}>
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-                  <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-                </svg>
-              </span>
-              {!isMobile && (
-                <span>
-                  (385) 439-5050
-                  <span style={{ display: 'block', fontWeight: 400, fontSize: 9, letterSpacing: '.14em', opacity: .65, marginTop: 2 }}>
-                    call or text
-                  </span>
-                </span>
-              )}
-            </a>
+              Let's Party
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M13 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
 
-          {/* Slide dots */}
-          <div style={{
-            marginTop: isMobile ? 20 : 28,
-            display: 'flex', gap: 8, alignItems: 'center',
-            animation: 'mud-hero-rise 800ms 800ms ease-out both',
-          }}>
+          {/* Slide dots — keyboard navigable, roving tabindex */}
+          <div
+            role="tablist"
+            aria-label="Carousel slides"
+            style={{
+              marginTop: isMobile ? 20 : 26,
+              display: 'flex', gap: 8, alignItems: 'center',
+              animation: 'mud-hero-rise 800ms 780ms ease-out both',
+            }}
+          >
             {SLIDES.map((_, i) => (
               <button
                 key={i}
-                onClick={() => setActiveIdx(i)}
-                aria-label={`Go to slide ${i + 1}`}
+                ref={el => dotRefs.current[i] = el}
+                role="tab"
+                aria-selected={i === activeIdx}
+                aria-label={`Slide ${i + 1} of ${SLIDES.length}`}
+                tabIndex={i === activeIdx ? 0 : -1}
+                onClick={() => goTo(i)}
+                onKeyDown={e => handleDotKeyDown(e, i)}
+                onFocus={e => { e.currentTarget.style.outline = '2px solid #FF3EA5'; e.currentTarget.style.outlineOffset = '3px'; }}
+                onBlur={e => { e.currentTarget.style.outline = 'none'; }}
                 style={{
-                  width: i === activeIdx ? 20 : 6,
+                  width: i === activeIdx ? 24 : 6,
                   height: 6,
                   borderRadius: 999,
                   border: 'none',
                   cursor: 'pointer',
                   padding: 0,
-                  background: i === activeIdx ? '#fff' : 'rgba(255,255,255,.35)',
+                  background: i === activeIdx ? '#ffffff' : 'rgba(255,255,255,.36)',
                   transition: 'width 300ms ease-out, background 300ms ease-out',
                 }}
               />
@@ -225,15 +279,24 @@ const Hero = ({ onCTA }) => {
         </div>
       </div>
 
-      {/* Scroll nudge */}
+      {/* ── Scroll nudge (desktop only) ───────────────────────────────────── */}
       {!isMobile && (
-        <div aria-hidden="true" style={{
-          position: 'absolute', bottom: 24, right: 'clamp(72px, 6vw, 110px)', zIndex: 3,
-          display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
-          color: '#fff', opacity: .42,
-        }}>
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            bottom: 24, right: 'clamp(72px, 6vw, 110px)',
+            zIndex: 3,
+            display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8,
+            color: '#fff', opacity: .4,
+          }}
+        >
           <span style={{ fontSize: 8, letterSpacing: '.36em', textTransform: 'uppercase' }}>Scroll</span>
-          <span style={{ width: 1, height: 40, background: 'linear-gradient(to bottom, #fff, transparent)', animation: 'mud-scroll-tick 1.8s ease-in-out infinite' }} />
+          <span style={{
+            width: 1, height: 40,
+            background: 'linear-gradient(to bottom, #fff, transparent)',
+            animation: 'mud-scroll-tick 1.8s ease-in-out infinite',
+          }} />
         </div>
       )}
 

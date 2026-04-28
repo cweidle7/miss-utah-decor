@@ -471,7 +471,6 @@ const WeMakeIt = ({ onCTA }) => {
           </p>
           <div style={{ display:'flex', gap: 16, flexWrap:'wrap' }}>
             <Button variant="primary" size="md" onClick={onCTA}>Start your event</Button>
-            <Button variant="ghost" size="md" href="#offer" onClick={(e)=>{e.preventDefault(); document.getElementById('offer')?.scrollIntoView({ behavior:'smooth' })}}>See our work</Button>
           </div>
         </div>
       </div>
@@ -546,7 +545,7 @@ const FORMSPREE_ENDPOINT = 'https://formspree.io/f/xwvajqnr';
 
 const ContactBlock = ({ onSubmit }) => {
   const { isMobile } = useBreakpoint();
-  const [form, setForm] = React.useState({ first:'', last:'', email:'', phone:'', date:'', eventType:'', message:'' });
+  const [form, setForm] = React.useState({ first:'', last:'', email:'', phone:'', eventType:'', date:'', eventName:'', address:'', city:'', gateCode:'', startTime:'', endTime:'', setupTime:'', indoorOutdoor:'Indoors', message:'' });
   const [sent, setSent] = React.useState(false);
   const [sending, setSending] = React.useState(false);
   const [error, setError] = React.useState(null);
@@ -559,8 +558,14 @@ const ContactBlock = ({ onSubmit }) => {
   };
   const onFocus = e => { e.target.style.borderColor='#fff'; e.target.style.boxShadow='0 0 0 4px rgba(255,255,255,.25)'; };
   const onBlur  = e => { e.target.style.borderColor='transparent'; e.target.style.boxShadow='none'; };
-  const Lab = ({ children }) => <label style={labelStyle}>{children}</label>;
+  const Lab = ({ children, required }) => <label style={labelStyle}>{children}{required && <span style={{ color:'rgba(255,255,255,.6)', marginLeft: 3 }}>*</span>}</label>;
   const eventTypes = ['Baby shower', 'Gender reveal', 'Birthday', 'Quinceañera', 'Wedding', 'Corporate', 'Other'];
+  const SectionDivider = ({ title, subtitle }) => (
+    <div style={{ gridColumn:'1 / -1', borderTop:'1px solid rgba(255,255,255,.25)', paddingTop: 20, marginTop: 4 }}>
+      <div style={{ fontFamily:'var(--font-sans)', fontWeight: 800, fontSize: 13, letterSpacing:'.14em', textTransform:'uppercase', color:'#fff' }}>{title}</div>
+      {subtitle && <div style={{ fontFamily:'var(--font-sans)', fontSize: 11, color:'rgba(255,255,255,.6)', marginTop: 3, letterSpacing:'.06em' }}>{subtitle}</div>}
+    </div>
+  );
 
   return (
     <section id="contact" style={{ padding:'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background:'#fff' }}>
@@ -612,8 +617,16 @@ const ContactBlock = ({ onSubmit }) => {
                   name: `${form.first} ${form.last}`,
                   email: form.email,
                   phone: form.phone,
-                  date: form.date,
                   eventType: form.eventType,
+                  eventDate: form.date,
+                  eventName: form.eventName,
+                  address: form.address,
+                  city: form.city,
+                  gateCode: form.gateCode,
+                  startTime: form.startTime,
+                  endTime: form.endTime,
+                  setupTime: form.setupTime,
+                  indoorOutdoor: form.indoorOutdoor,
                   message: form.message,
                 }),
               });
@@ -644,29 +657,41 @@ const ContactBlock = ({ onSubmit }) => {
               <div style={{ marginTop: 24, fontFamily:'var(--font-sans)', fontSize: 12, letterSpacing:'.18em', textTransform:'uppercase' }}>Miss Utah Decor</div>
             </div>
           ) : (<>
-            <div style={{ gridColumn:'1 / -1', position:'relative' }}>
-              <div style={{ fontFamily:'var(--font-display)', fontStyle:'italic', fontSize: 22, color:'#fff', marginBottom: 20 }}>Tell us about your event</div>
+            {/* Steps header */}
+            <div style={{ gridColumn:'1 / -1', display:'grid', gridTemplateColumns:'repeat(3, 1fr)', gap: 12, marginBottom: 8 }}>
+              {[
+                { n:'1', label:'Submit your event details here' },
+                { n:'2', label:'Work 1:1 with your balloon design expert' },
+                { n:'3', label:'Approve your dream design and relax, we do the rest!' },
+              ].map(({ n, label }) => (
+                <div key={n} style={{ textAlign:'center', background:'rgba(255,255,255,.12)', borderRadius: 12, padding:'14px 10px' }}>
+                  <div style={{ fontFamily:'var(--font-sans)', fontWeight: 800, fontSize: 11, letterSpacing:'.16em', textTransform:'uppercase', color:'#fff', marginBottom: 4 }}>Step {n}</div>
+                  <div style={{ fontFamily:'var(--font-sans)', fontSize: 11, color:'rgba(255,255,255,.8)', lineHeight: 1.4 }}>{label}</div>
+                </div>
+              ))}
             </div>
+
+            {/* Contact Info — required */}
+            <SectionDivider title="Your Contact Info" subtitle="Required" />
             <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
-              <Lab>First name</Lab>
+              <Lab required>First name</Lab>
               <input value={form.first} onChange={e=>setForm({...form,first:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
             <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
-              <Lab>Last name</Lab>
+              <Lab required>Last name</Lab>
               <input value={form.last} onChange={e=>setForm({...form,last:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
             <div style={{ gridColumn:'1 / -1', position:'relative' }}>
-              <Lab>Email</Lab>
+              <Lab required>Email</Lab>
               <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
-              <Lab>Phone</Lab>
-              <input type="tel" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
+            <div style={{ gridColumn:'1 / -1', position:'relative' }}>
+              <Lab required>Phone</Lab>
+              <input type="tel" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
-              <Lab>Event date</Lab>
-              <input type="date" value={form.date} onChange={e=>setForm({...form,date:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
-            </div>
+
+            {/* Event Info — optional */}
+            <SectionDivider title="Event Info" subtitle="Optional, but helps us quote you faster" />
             <div style={{ gridColumn:'1 / -1', position:'relative' }}>
               <Lab>Event type</Lab>
               <div style={{ display:'flex', gap: 8, flexWrap:'wrap' }}>
@@ -685,8 +710,48 @@ const ContactBlock = ({ onSubmit }) => {
               </div>
             </div>
             <div style={{ gridColumn:'1 / -1', position:'relative' }}>
+              <Lab>Event name</Lab>
+              <input value={form.eventName} onChange={e=>setForm({...form,eventName:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} placeholder="e.g. Sofia's Quinceañera" />
+            </div>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+              <Lab>Event date</Lab>
+              <input type="date" value={form.date} onChange={e=>setForm({...form,date:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
+            </div>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+              <Lab>Indoors or outdoors?</Lab>
+              <select value={form.indoorOutdoor} onChange={e=>setForm({...form,indoorOutdoor:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle}>
+                <option>Indoors</option>
+                <option>Outdoors</option>
+                <option>Both</option>
+              </select>
+            </div>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+              <Lab>Event address</Lab>
+              <input value={form.address} onChange={e=>setForm({...form,address:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} placeholder="Street address" />
+            </div>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+              <Lab>City</Lab>
+              <input value={form.city} onChange={e=>setForm({...form,city:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} placeholder="City" />
+            </div>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+              <Lab>Event start time</Lab>
+              <input type="time" value={form.startTime} onChange={e=>setForm({...form,startTime:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
+            </div>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+              <Lab>Event end time</Lab>
+              <input type="time" value={form.endTime} onChange={e=>setForm({...form,endTime:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
+            </div>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+              <Lab>Earliest setup time</Lab>
+              <input type="time" value={form.setupTime} onChange={e=>setForm({...form,setupTime:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
+            </div>
+            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+              <Lab>Gate / access code</Lab>
+              <input value={form.gateCode} onChange={e=>setForm({...form,gateCode:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} placeholder="If applicable" />
+            </div>
+            <div style={{ gridColumn:'1 / -1', position:'relative' }}>
               <Lab>Tell us the vibe</Lab>
-              <textarea rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={{...inputStyle, resize:'none'}} placeholder="Colors, venue, guest count, inspiration photos…" required />
+              <textarea rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={{...inputStyle, resize:'none'}} placeholder="Colors, theme, guest count, inspiration photos…" required />
             </div>
             {error && (
               <div style={{ gridColumn:'1 / -1', background:'rgba(0,0,0,.25)', borderRadius: 10, padding:'12px 16px', color:'#fff', fontSize: 13, textAlign:'center' }}>

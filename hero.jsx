@@ -1,7 +1,26 @@
-// Miss Utah Decor — Hero
+// Miss Utah Decor — Hero (carousel)
+
+const SLIDES = [
+  { src: 'assets/gallery/balloon-arch-pink-silver.jpg',          pos: 'center 40%' },
+  { src: 'assets/gallery/milestone-50-pastel.jpg',               pos: 'center 48%' },
+  { src: 'assets/gallery/babyshower-oh-baby.jpg',                pos: 'center 25%' },
+  { src: 'assets/gallery/spring-in-bloom/backdrop-front.jpg',    pos: 'center 42%' },
+];
 
 const Hero = ({ onCTA }) => {
   const { isMobile } = useBreakpoint();
+  const [activeIdx, setActiveIdx] = React.useState(0);
+
+  // Preload all slides on mount so later frames don't flash
+  React.useEffect(() => {
+    SLIDES.forEach(({ src }) => { const img = new Image(); img.src = src; });
+  }, []);
+
+  // Advance every 4.2 s
+  React.useEffect(() => {
+    const id = setInterval(() => setActiveIdx(i => (i + 1) % SLIDES.length), 4200);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <section style={{
@@ -9,27 +28,37 @@ const Hero = ({ onCTA }) => {
       overflow: 'hidden', background: '#150A1C',
       isolation: 'isolate',
     }}>
-      {/* Ken Burns background — pure CSS, GPU-composited via will-change */}
+      {/* Ken Burns wrapper — single continuous zoom across all slides */}
       <div
         aria-hidden="true"
         style={{
           position: 'absolute', inset: 0, zIndex: 0,
-          backgroundImage: 'url(assets/hero/hero-poster.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center 20%',
-          animation: 'mud-hero-kb 14s ease-in-out infinite alternate',
+          animation: 'mud-hero-kb 18s ease-in-out infinite alternate',
           willChange: 'transform',
-          transformOrigin: 'center center',
         }}
-      />
+      >
+        {SLIDES.map((slide, i) => (
+          <div
+            key={slide.src}
+            style={{
+              position: 'absolute', inset: 0,
+              backgroundImage: `url(${slide.src})`,
+              backgroundSize: 'cover',
+              backgroundPosition: slide.pos,
+              opacity: i === activeIdx ? 1 : 0,
+              transition: 'opacity 900ms ease-in-out',
+            }}
+          />
+        ))}
+      </div>
 
-      {/* Bottom gradient — shields text without killing the image */}
+      {/* Bottom gradient — shields text */}
       <div aria-hidden="true" style={{
         position: 'absolute', inset: 0, zIndex: 1,
         background: 'linear-gradient(to top, rgba(0,0,0,0.62) 0%, rgba(0,0,0,0.28) 36%, transparent 60%)',
       }} />
 
-      {/* Side label — location */}
+      {/* Side label */}
       {!isMobile && (
         <div aria-hidden="true" style={{
           position: 'absolute', left: 'clamp(20px, 3vw, 40px)', top: '52%', transform: 'translateY(-50%)',
@@ -166,6 +195,31 @@ const Hero = ({ onCTA }) => {
                 </span>
               )}
             </a>
+          </div>
+
+          {/* Slide dots */}
+          <div style={{
+            marginTop: isMobile ? 20 : 28,
+            display: 'flex', gap: 8, alignItems: 'center',
+            animation: 'mud-hero-rise 800ms 800ms ease-out both',
+          }}>
+            {SLIDES.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => setActiveIdx(i)}
+                aria-label={`Go to slide ${i + 1}`}
+                style={{
+                  width: i === activeIdx ? 20 : 6,
+                  height: 6,
+                  borderRadius: 999,
+                  border: 'none',
+                  cursor: 'pointer',
+                  padding: 0,
+                  background: i === activeIdx ? '#fff' : 'rgba(255,255,255,.35)',
+                  transition: 'width 300ms ease-out, background 300ms ease-out',
+                }}
+              />
+            ))}
           </div>
 
         </div>

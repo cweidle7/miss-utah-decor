@@ -3,10 +3,10 @@
 const SLIDES = [
   // Spring in Bloom — landscape floral wall, crop avoids the grass base
   { src: 'assets/Hero_carousel/backdrop-angle.jpg',                  pos: 'center 42%' },
-  // Eid Mubarak — portrait, mosque silhouette centered
-  { src: 'assets/Hero_carousel/eid-mubarak-mosque-emerald.jpg',      pos: 'center 36%' },
-  // Mermaid 1st bday — crop skips the table foreground, shows the backdrop
-  { src: 'assets/Hero_carousel/hero-poster.jpg',                     pos: 'center 22%' },
+  // Eid Mubarak — crescent minimalist
+  { src: 'assets/Hero_carousel/eid-mubarak-crescent-minimalist.jpg', pos: 'center 36%' },
+  // Mermaid 1st bday — carriage backdrop
+  { src: 'assets/Hero_carousel/first-bday-mermaid-carriage.jpg',     pos: 'center 22%' },
   // Corporate 40 Years — crop cuts the ceiling, centers on marquee + balloons
   { src: 'assets/Hero_carousel/marquee-corporate-40-years.jpg',      pos: 'center 55%' },
   // Outdoor picnic — crop keeps the tablescape + florals, trims sky + cushions
@@ -70,6 +70,7 @@ const Hero = ({ onCTA }) => {
         style={{
           position: 'absolute', inset: 0, zIndex: 0,
           animation: 'mud-hero-kb 18s ease-in-out infinite alternate',
+          transformOrigin: 'center center',
           willChange: 'transform',
         }}
       >
@@ -299,8 +300,8 @@ const Hero = ({ onCTA }) => {
 
       <style>{`
         @keyframes mud-hero-kb {
-          from { transform: scale(1.0); }
-          to   { transform: scale(1.08); }
+          from { transform: scale(1.0)   translate3d(0, 0, 0); }
+          to   { transform: scale(1.10)  translate3d(0, 0, 0); }
         }
         @keyframes mud-hero-rise {
           from { opacity: 0; transform: translateY(20px); }

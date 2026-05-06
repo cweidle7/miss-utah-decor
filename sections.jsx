@@ -9,7 +9,7 @@ const IMG = {
   milestone:   'assets/gallery/milestone-50-pastel.jpg',
   grabgo:      'assets/gallery/balloon-bouquet-welcome-home.jpg',
   featureMake: 'assets/press/tv-good-things-utah.jpg',
-  tvApp:       'assets/press/Good Things Utah Logo.png',
+  tvApp:       'assets/press/Good%20Things%20Utah%20Logo.png',
   ig1:         'assets/gallery/babyshower-oh-baby.jpg',
   ig2:         'assets/gallery/gender-reveal-boy-or-girl.jpg',
   ig3:         'assets/gallery/milestone-50-pastel.jpg',

@@ -17,6 +17,26 @@
     50% { transform: scale(1.4); opacity: .6; }
   }
   ::selection { background: var(--pink-200); color: var(--ink); }
+
+  /* Prevent padding from expanding elements past their explicit width */
+  *, *::before, *::after { box-sizing: border-box; }
+
+  @media (max-width: 640px) {
+    /* Header: flatten to flex, hide nav and phone to keep only logo + CTA button */
+    header > div {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+    }
+    header nav { display: none !important; }
+    header > div > div:last-child > a { display: none !important; }
+
+    /* Contact section: stack the two-column info + form layout vertically */
+    #contact > div { grid-template-columns: 1fr !important; }
+
+    /* Form card: collapse two-column field grid to single column */
+    #contact form { grid-template-columns: 1fr !important; }
+  }
 </style>
 <script src="./react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous" data-src-loc="632:810:819"></script>
 <script src="./react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous" data-src-loc="820:1006:1015"></script>
@@ -3860,7 +3880,7 @@ var ContactBlock = function ContactBlock(_ref6) {
       columnNumber: 15
     },
     "data-om-id": "jsx:/https:/78a193d2-7df0-4a2e-885e-cca090d756a7.claudeusercontent.com/v1/design/projects/78a193d2-7df0-4a2e-885e-cca090d756a7/serve/components/sections.jsx:28200:459:15"
-  }, "Phone"), /*#__PURE__*/React.createElement("input", {
+  }, "Phone", React.createElement("span", {style:{fontWeight:400,opacity:.65,fontSize:10,marginLeft:8,letterSpacing:'.04em',textTransform:'none'}}, " *optional")), /*#__PURE__*/React.createElement("input", {
     type: "tel",
     value: form.phone,
     onChange: function onChange(e) {
@@ -3894,7 +3914,7 @@ var ContactBlock = function ContactBlock(_ref6) {
       columnNumber: 15
     },
     "data-om-id": "jsx:/https:/78a193d2-7df0-4a2e-885e-cca090d756a7.claudeusercontent.com/v1/design/projects/78a193d2-7df0-4a2e-885e-cca090d756a7/serve/components/sections.jsx:28461:463:15"
-  }, "Event date"), /*#__PURE__*/React.createElement("input", {
+  }, "Event date", React.createElement("span", {style:{fontWeight:400,opacity:.65,fontSize:10,marginLeft:8,letterSpacing:'.04em',textTransform:'none'}}, " *optional")), /*#__PURE__*/React.createElement("input", {
     type: "date",
     value: form.date,
     onChange: function onChange(e) {
@@ -3929,7 +3949,7 @@ var ContactBlock = function ContactBlock(_ref6) {
       columnNumber: 15
     },
     "data-om-id": "jsx:/https:/78a193d2-7df0-4a2e-885e-cca090d756a7.claudeusercontent.com/v1/design/projects/78a193d2-7df0-4a2e-885e-cca090d756a7/serve/components/sections.jsx:28747:467:15"
-  }, "Event type"), /*#__PURE__*/React.createElement("div", {
+  }, "Event type", React.createElement("span", {style:{fontWeight:400,opacity:.65,fontSize:10,marginLeft:8,letterSpacing:'.04em',textTransform:'none'}}, " *optional")), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 8,

@@ -37,6 +37,10 @@
     /* Form card: collapse two-column field grid to single column */
     #contact form { grid-template-columns: 1fr !important; }
   }
+
+  /* Grid cells must be able to shrink below content-width — prevents inputs from escaping their column */
+  #contact form > div { min-width: 0; }
+  input, textarea, select { max-width: 100%; }
 </style>
 <script src="./react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous" data-src-loc="632:810:819"></script>
 <script src="./react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous" data-src-loc="820:1006:1015"></script>
@@ -3863,7 +3867,7 @@ var ContactBlock = function ContactBlock(_ref6) {
       columnNumber: 15
     },
     "data-om-id": "jsx:/https:/78a193d2-7df0-4a2e-885e-cca090d756a7.claudeusercontent.com/v1/design/projects/78a193d2-7df0-4a2e-885e-cca090d756a7/serve/components/sections.jsx:27959:456:15"
-  })), /*#__PURE__*/React.createElement("div", {
+  })), React.createElement("div", {style:{gridColumn:'1 / -1',display:'flex',alignItems:'center',gap:14,margin:'6px 0'}}, React.createElement("div",{style:{flex:1,height:'1px',background:'rgba(255,255,255,.28)'}}), React.createElement("span",{style:{fontFamily:'var(--font-sans)',fontSize:11,fontWeight:600,letterSpacing:'.12em',textTransform:'uppercase',color:'rgba(255,255,255,.8)',whiteSpace:'nowrap'}},"Optional — helps us quote you faster"), React.createElement("div",{style:{flex:1,height:'1px',background:'rgba(255,255,255,.28)'}})), /*#__PURE__*/React.createElement("div", {
     style: {
       position: 'relative'
     },
@@ -3880,7 +3884,7 @@ var ContactBlock = function ContactBlock(_ref6) {
       columnNumber: 15
     },
     "data-om-id": "jsx:/https:/78a193d2-7df0-4a2e-885e-cca090d756a7.claudeusercontent.com/v1/design/projects/78a193d2-7df0-4a2e-885e-cca090d756a7/serve/components/sections.jsx:28200:459:15"
-  }, "Phone", React.createElement("span", {style:{fontWeight:400,opacity:.65,fontSize:10,marginLeft:8,letterSpacing:'.04em',textTransform:'none'}}, " *optional")), /*#__PURE__*/React.createElement("input", {
+  }, "Phone"), /*#__PURE__*/React.createElement("input", {
     type: "tel",
     value: form.phone,
     onChange: function onChange(e) {
@@ -3914,7 +3918,7 @@ var ContactBlock = function ContactBlock(_ref6) {
       columnNumber: 15
     },
     "data-om-id": "jsx:/https:/78a193d2-7df0-4a2e-885e-cca090d756a7.claudeusercontent.com/v1/design/projects/78a193d2-7df0-4a2e-885e-cca090d756a7/serve/components/sections.jsx:28461:463:15"
-  }, "Event date", React.createElement("span", {style:{fontWeight:400,opacity:.65,fontSize:10,marginLeft:8,letterSpacing:'.04em',textTransform:'none'}}, " *optional")), /*#__PURE__*/React.createElement("input", {
+  }, "Event date"), /*#__PURE__*/React.createElement("input", {
     type: "date",
     value: form.date,
     onChange: function onChange(e) {
@@ -3949,7 +3953,7 @@ var ContactBlock = function ContactBlock(_ref6) {
       columnNumber: 15
     },
     "data-om-id": "jsx:/https:/78a193d2-7df0-4a2e-885e-cca090d756a7.claudeusercontent.com/v1/design/projects/78a193d2-7df0-4a2e-885e-cca090d756a7/serve/components/sections.jsx:28747:467:15"
-  }, "Event type", React.createElement("span", {style:{fontWeight:400,opacity:.65,fontSize:10,marginLeft:8,letterSpacing:'.04em',textTransform:'none'}}, " *optional")), /*#__PURE__*/React.createElement("div", {
+  }, "Event type"), /*#__PURE__*/React.createElement("div", {
     style: {
       display: 'flex',
       gap: 8,

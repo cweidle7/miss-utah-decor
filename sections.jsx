@@ -6,7 +6,7 @@ const IMG = {
   florals:     'assets/gallery/bouquet-roses-handheld.jpg',
   milestone:   'assets/gallery/milestone-50-pastel.jpg',
   grabgo:      'assets/gallery/balloon-bouquet-welcome-home.jpg',
-  featureMake: 'assets/press/tv-good-things-utah.jpg',
+  featureMake: 'assets/press/tv-good-things-utah-edit.png',
   tvApp:       'assets/press/Good%20Things%20Utah%20Logo.png',
   ig1:         'assets/gallery/babyshower-oh-baby.jpg',
   ig2:         'assets/gallery/gender-reveal-boy-or-girl.jpg',

@@ -1,7 +1,5 @@
 // Miss Utah Decor — Homepage content sections (trust strip, offerings, packages, testimonials, make-it, insta, contact)
 
-// Image paths — see assets/manifest.json for source dimensions and full alt copy.
-// All assets live under /assets organized by use: /gallery, /hero, /press.
 const IMG = {
   archTall:    'assets/gallery/balloon-arch-pink-silver.jpg',
   backdrops:   'assets/gallery/backdrop-sage-its-a-boy.jpg',
@@ -237,8 +235,6 @@ const CategoryGrid = ({ onPick }) => {
             images={['assets/gallery/milestone-50-pastel.jpg','assets/gallery/marquee-8th-birthday-pink-purple.jpg','assets/gallery/marquee-name-anavay-lavender.jpg']}
             alts={['Pastel pink and lavender 50th birthday balloon arch with marquee numbers']}
             label="Milestone Numbers" copy="Marquee 30s, 40s, 50s. Lit up and photo-ready." onClick={()=>onPick?.('milestone')} />
-          {/* Grab 'n Go — balloon-bouquet-welcome-home.jpg (used twice) */}
-          {/* TODO: add a second distinct grab-n-go image when available */}
           <CategoryTile isMobile={isMobile} startDelay={6000}
             images={['assets/gallery/balloon-bouquet-welcome-home.jpg','assets/gallery/balloon-bouquet-welcome-home.jpg']}
             alts={['Silver and gold Welcome Home balloon bouquet for a military homecoming']}
@@ -502,7 +498,7 @@ const InstagramGrid = () => {
         </div>
         <div style={{
           display:'grid',
-          gridTemplateColumns: isMobile ? 'repeat(2, 1fr)' : isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
+          gridTemplateColumns: isTablet ? 'repeat(2, 1fr)' : 'repeat(4, 1fr)',
           gap: 18,
         }}>
           {posts.map((p, i) => (
@@ -566,6 +562,8 @@ const ContactBlock = ({ onSubmit }) => {
       {subtitle && <div style={{ fontFamily:'var(--font-sans)', fontSize: 11, color:'rgba(255,255,255,.6)', marginTop: 3, letterSpacing:'.06em' }}>{subtitle}</div>}
     </div>
   );
+  // Returns wrapper style for a form field. full=true → spans both columns; false → responsive half-width
+  const fieldWrap = (full) => ({ position:'relative', gridColumn: full || isMobile ? '1 / -1' : 'auto' });
 
   return (
     <section id="contact" style={{ padding:'clamp(64px,10vw,128px) clamp(20px,4vw,56px)', background:'#fff' }}>
@@ -634,7 +632,7 @@ const ContactBlock = ({ onSubmit }) => {
               if (!res.ok) throw new Error(data?.error || 'Submission failed');
               setSent(true);
               onSubmit?.(form);
-            } catch (err) {
+            } catch {
               setError('Something went wrong. Please try again or email us directly.');
             } finally {
               setSending(false);
@@ -673,26 +671,26 @@ const ContactBlock = ({ onSubmit }) => {
 
             {/* Contact Info — required */}
             <SectionDivider title="Your Contact Info" subtitle="Required" />
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab required>First name</Lab>
               <input value={form.first} onChange={e=>setForm({...form,first:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab required>Last name</Lab>
               <input value={form.last} onChange={e=>setForm({...form,last:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
-            <div style={{ gridColumn:'1 / -1', position:'relative' }}>
+            <div style={fieldWrap(true)}>
               <Lab required>Email</Lab>
               <input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
-            <div style={{ gridColumn:'1 / -1', position:'relative' }}>
+            <div style={fieldWrap(true)}>
               <Lab required>Phone</Lab>
               <input type="tel" value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} required />
             </div>
 
             {/* Event Info — optional */}
             <SectionDivider title="Event Info" subtitle="Optional, but helps us quote you faster" />
-            <div style={{ gridColumn:'1 / -1', position:'relative' }}>
+            <div style={fieldWrap(true)}>
               <Lab>Event type</Lab>
               <div style={{ display:'flex', gap: 8, flexWrap:'wrap' }}>
                 {eventTypes.map(t => (
@@ -709,15 +707,15 @@ const ContactBlock = ({ onSubmit }) => {
                 ))}
               </div>
             </div>
-            <div style={{ gridColumn:'1 / -1', position:'relative' }}>
+            <div style={fieldWrap(true)}>
               <Lab>Event name</Lab>
               <input value={form.eventName} onChange={e=>setForm({...form,eventName:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} placeholder="e.g. Sofia's Quinceañera" />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab>Event date</Lab>
               <input type="date" value={form.date} onChange={e=>setForm({...form,date:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab>Indoors or outdoors?</Lab>
               <select value={form.indoorOutdoor} onChange={e=>setForm({...form,indoorOutdoor:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle}>
                 <option>Indoors</option>
@@ -725,33 +723,33 @@ const ContactBlock = ({ onSubmit }) => {
                 <option>Both</option>
               </select>
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab>Event address</Lab>
               <input value={form.address} onChange={e=>setForm({...form,address:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} placeholder="Street address" />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab>City</Lab>
               <input value={form.city} onChange={e=>setForm({...form,city:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} placeholder="City" />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab>Event start time</Lab>
               <input type="time" value={form.startTime} onChange={e=>setForm({...form,startTime:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab>Event end time</Lab>
               <input type="time" value={form.endTime} onChange={e=>setForm({...form,endTime:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab>Earliest setup time</Lab>
               <input type="time" value={form.setupTime} onChange={e=>setForm({...form,setupTime:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} />
             </div>
-            <div style={{ position:'relative', gridColumn: isMobile ? '1 / -1' : 'auto' }}>
+            <div style={fieldWrap(false)}>
               <Lab>Gate / access code</Lab>
               <input value={form.gateCode} onChange={e=>setForm({...form,gateCode:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={inputStyle} placeholder="If applicable" />
             </div>
-            <div style={{ gridColumn:'1 / -1', position:'relative' }}>
+            <div style={fieldWrap(true)}>
               <Lab>Tell us the vibe</Lab>
-              <textarea rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={{...inputStyle, resize:'none'}} placeholder="Colors, theme, guest count, inspiration photos…" required />
+              <textarea rows={4} value={form.message} onChange={e=>setForm({...form,message:e.target.value})} onFocus={onFocus} onBlur={onBlur} style={{...inputStyle, resize:'none'}} placeholder="Colors, theme, guest count, inspiration photos…" />
             </div>
             {error && (
               <div style={{ gridColumn:'1 / -1', background:'rgba(0,0,0,.25)', borderRadius: 10, padding:'12px 16px', color:'#fff', fontSize: 13, textAlign:'center' }}>

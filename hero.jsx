@@ -1,4 +1,4 @@
-// Miss Utah Decor — Hero Carousel
+// Miss Utah Decor — Hero carousel
 
 const SLIDES = [
   // Spring in Bloom — landscape floral wall, crop avoids the grass base
@@ -34,8 +34,6 @@ const Hero = ({ onCTA }) => {
     return () => clearInterval(id);
   }, [paused]);
 
-  const goTo = React.useCallback(i => setActiveIdx(i), []);
-
   // Roving tabindex keyboard nav on dots
   const handleDotKeyDown = (e, i) => {
     let next = i;
@@ -44,7 +42,7 @@ const Hero = ({ onCTA }) => {
     } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
       e.preventDefault(); next = (i - 1 + SLIDES.length) % SLIDES.length;
     } else { return; }
-    goTo(next);
+    setActiveIdx(next);
     dotRefs.current[next]?.focus();
   };
 
@@ -161,7 +159,6 @@ const Hero = ({ onCTA }) => {
       }}>
         <div style={{ maxWidth: isMobile ? '92%' : 660 }}>
 
-          {/* Eyebrow */}
           <div style={{
             display: 'flex', alignItems: 'center', gap: 14,
             marginBottom: isMobile ? 16 : 22,
@@ -181,7 +178,6 @@ const Hero = ({ onCTA }) => {
             </span>
           </div>
 
-          {/* H1 */}
           <h1 style={{
             fontFamily: 'var(--font-display)', fontWeight: 800,
             fontSize: isMobile ? 'clamp(36px, 10vw, 54px)' : 'clamp(56px, 7vw, 104px)',
@@ -195,7 +191,6 @@ const Hero = ({ onCTA }) => {
             <span style={{ display: 'block', color: '#FF3EA5' }}>Unforgettable</span>
           </h1>
 
-          {/* Subheadline */}
           <p style={{
             fontFamily: 'var(--font-script)',
             fontSize: isMobile ? 'clamp(18px, 4vw, 22px)' : 'clamp(20px, 2vw, 28px)',
@@ -207,7 +202,6 @@ const Hero = ({ onCTA }) => {
             we don't just make balloons. We make memories.
           </p>
 
-          {/* CTA */}
           <div style={{
             marginTop: isMobile ? 24 : 36,
             animation: 'mud-hero-rise 800ms 620ms ease-out both',
@@ -218,15 +212,15 @@ const Hero = ({ onCTA }) => {
                 fontFamily: 'var(--font-sans)', fontWeight: 700,
                 fontSize: isMobile ? 12 : 13,
                 letterSpacing: '.18em', textTransform: 'uppercase',
-                color: '#fff', background: '#FF3EA5',
+                color: '#fff',
                 border: 'none', borderRadius: 999,
                 padding: isMobile ? '14px 28px' : '18px 40px',
                 cursor: 'pointer',
                 display: 'inline-flex', alignItems: 'center', gap: 10,
                 background: btnHover ? '#e62e95' : '#FF3EA5',
-              transform: btnHover ? 'translateY(-2px)' : 'translateY(0)',
-              transition: 'background 150ms ease-out, transform 200ms ease-out',
-              boxShadow: '0 8px 28px rgba(255,62,165,.38)',
+                transform: btnHover ? 'translateY(-2px)' : 'translateY(0)',
+                transition: 'background 150ms ease-out, transform 200ms ease-out',
+                boxShadow: '0 8px 28px rgba(255,62,165,.38)',
               }}
               onMouseEnter={() => setBtnHover(true)}
               onMouseLeave={() => setBtnHover(false)}
@@ -256,7 +250,7 @@ const Hero = ({ onCTA }) => {
                 aria-selected={i === activeIdx}
                 aria-label={`Slide ${i + 1} of ${SLIDES.length}`}
                 tabIndex={i === activeIdx ? 0 : -1}
-                onClick={() => goTo(i)}
+                onClick={() => setActiveIdx(i)}
                 onKeyDown={e => handleDotKeyDown(e, i)}
                 onFocus={e => { e.currentTarget.style.outline = '2px solid #FF3EA5'; e.currentTarget.style.outlineOffset = '3px'; }}
                 onBlur={e => { e.currentTarget.style.outline = 'none'; }}
@@ -310,14 +304,6 @@ const Hero = ({ onCTA }) => {
         @keyframes mud-scroll-tick {
           0%,100% { transform: scaleY(1); opacity: .28; }
           50%     { transform: scaleY(1.4); opacity: .75; }
-        }
-        @keyframes mud-marquee {
-          from { transform: translateX(0); }
-          to   { transform: translateX(-50%); }
-        }
-        @keyframes mud-float {
-          0%   { transform: translate(0,0) rotate(-3deg); }
-          100% { transform: translate(8px,-14px) rotate(3deg); }
         }
       `}</style>
     </section>

@@ -1,6 +1,5 @@
 // Miss Utah Decor — shared bits (logo, buttons, header, footer, section intro)
 
-// Returns current breakpoint state; re-renders on window resize
 const useBreakpoint = () => {
   const [w, setW] = React.useState(() => window.innerWidth);
   React.useEffect(() => {
@@ -269,7 +268,7 @@ const Footer = () => {
       <div style={{
         position: 'relative', maxWidth: 1280, margin: '0 auto',
         display: 'grid',
-        gridTemplateColumns: isMobile ? '1fr 1fr' : isTablet ? '1fr 1fr' : '1.4fr 1fr 1fr 1fr',
+        gridTemplateColumns: isTablet ? '1fr 1fr' : '1.4fr 1fr 1fr 1fr',
         gap: isMobile ? '32px 24px' : 48, alignItems: 'flex-start',
       }}>
         <div style={{ gridColumn: isMobile ? '1 / -1' : 'auto' }}>
